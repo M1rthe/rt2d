@@ -5,6 +5,7 @@ project (rt2d)
 # delete CMakeCache.txt from the build directory when you edit these options
 ####################################################################
 OPTION(MAKE_START "Make RT2D start application" ON)
+OPTION(MAKE_BLEND "Make RT2D Blend application" ON)
 OPTION(MAKE_DEMO "Make RT2D demo (tests) application" ON)
 OPTION(MAKE_CANVAS_DEMO "Make RT2D Canvas demo (tests) application" ON)
 OPTION(MAKE_FLOCKING "Make flocking application" ON)
@@ -165,6 +166,27 @@ IF(MAKE_START)
 	# Copy assets to the build directory
 	file(
 		COPY start/assets
+		DESTINATION ${CMAKE_BINARY_DIR}
+	)
+ENDIF()
+
+####################################################################
+# Blend							           #
+####################################################################
+IF(MAKE_BLEND)
+	add_executable(Blend
+		Blend/main.cpp
+		Blend/myentity.cpp
+		Blend/myentity.h
+		Blend/myscene.cpp
+		Blend/myscene.h
+	)
+	target_link_libraries(Blend
+		${ALL_GRAPHICS_LIBS}
+	)
+	# Copy assets to the build directory
+	file(
+		COPY Blend/assets
 		DESTINATION ${CMAKE_BINARY_DIR}
 	)
 ENDIF()
