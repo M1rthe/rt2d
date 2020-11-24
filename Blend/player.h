@@ -18,13 +18,17 @@ class Player : public Entity
 {
 public:
 
+	Vector2 velocity;
+	Vector2 acceleration;
+	float topspeed;
+
 	Vector2 finalDestination;
 	Vector2 mousePosition;
-	Vector2 dir;
+	Vector2 direction;
 	float distance;
 	float magnitude;
 	/// @brief Constructor
-	Player(Vector2 wp);
+	Player(Vector2 worldPosition);
 	/// @brief Destructor
 	virtual ~Player();
 
