@@ -6,19 +6,27 @@
  * @brief description of MyEntity behavior.
  */
 
-#ifndef MYENTITY_H
-#define MYENTITY_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <rt2d/entity.h>
+#include <rt2d/pointx.h>
+#include <cmath>
 
 /// @brief The MyEntity class is the Entity implementation.
-class MyEntity : public Entity
+class Player : public Entity
 {
 public:
+
+	Vector2 finalDestination;
+	Vector2 mousePosition;
+	Vector2 dir;
+	float distance;
+	float magnitude;
 	/// @brief Constructor
-	MyEntity();
+	Player(Vector2 wp);
 	/// @brief Destructor
-	virtual ~MyEntity();
+	virtual ~Player();
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
@@ -27,6 +35,7 @@ public:
 
 private:
 	/* add your private declarations */
+	float speed;
 };
 
-#endif /* MYENTITY_H */
+#endif /* PLAYER_H */
