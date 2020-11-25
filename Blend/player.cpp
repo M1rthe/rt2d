@@ -6,24 +6,25 @@
 
 #include "player.h"
 
-Player::Player(Vector2 worldPosition) : Entity()
+Player::Player() : Entity()
 {
-	this->addSprite("assets/square.tga");
+	this->addSprite("assets/square.tga"); 
 	this->sprite()->color = RED;
-
-	position = worldPosition;
 
 	velocity = Vector2();
 	acceleration = Vector2(0.0, 0.0);
 	topspeed = 10.0;
 
-	finalDestination = Vector2(worldPosition);
+	finalDestination = position;
 	mousePosition = Vector2();
 	direction = Vector2();
 	distance = 0.0;
 	magnitude = 0.0;
 	
 	speed = 100.0;
+
+	std::cout << "\n position constructor: " << position << "\n";
+	std::cout << "worldpos constructor: " << this->worldposition() << "\n\n";
 }
 
 Player::~Player()
@@ -33,6 +34,9 @@ Player::~Player()
 
 void Player::update(float deltaTime)
 {
+	std::cout << "position update: " << position << "\n";
+	std::cout << "worldpos update: " << this->worldposition() << "\n";
+
 	// ###############################################################
 	// Movement
 	// ###############################################################
@@ -43,7 +47,7 @@ void Player::update(float deltaTime)
 	//If left mouse down
 	if (input()->getMouseDown(0)) {
 		
-		finalDestination = mousePosition;
+		finalDestination = mousePosition; 
 		velocity *= 0;
 	}
 
@@ -54,7 +58,6 @@ void Player::update(float deltaTime)
 	//normalize dir
 	direction = Vector2(direction.x / distance, direction.y / distance);
 	acceleration = direction / 250;
-	std::cout << "acceleration: " << acceleration << "\n";
 
 	if (distance >= 2.0) {
 

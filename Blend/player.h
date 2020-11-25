@@ -28,7 +28,7 @@ public:
 	float distance;
 	float magnitude;
 	/// @brief Constructor
-	Player(Vector2 worldPosition);
+	Player();
 	/// @brief Destructor
 	virtual ~Player();
 
