@@ -18,15 +18,8 @@ class Player : public Entity
 {
 public:
 
-	Vector2 velocity;
-	Vector2 acceleration;
-	float topspeed;
-
 	Vector2 finalDestination;
-	Vector2 mousePosition;
-	Vector2 direction;
-	float distance;
-	float magnitude;
+
 	/// @brief Constructor
 	Player();
 	/// @brief Destructor
@@ -38,8 +31,15 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-	/* add your private declarations */
+	void movement(float dt);
+
+	Vector2 velocity;
+	Vector2 acceleration;
+	Vector2 mousePosition;
+	Vector2 direction;
 	float speed;
+	float topspeed;
+	float distance;
 };
 
 #endif /* PLAYER_H */

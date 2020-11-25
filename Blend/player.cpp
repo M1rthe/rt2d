@@ -6,48 +6,40 @@
 
 #include "player.h"
 
-Player::Player() : Entity()
-{
+Player::Player() : Entity() {
 	this->addSprite("assets/square.tga"); 
 	this->sprite()->color = RED;
 
 	velocity = Vector2();
 	acceleration = Vector2(0.0, 0.0);
-	topspeed = 10.0;
-
-	finalDestination = position;
 	mousePosition = Vector2();
 	direction = Vector2();
-	distance = 0.0;
-	magnitude = 0.0;
-	
 	speed = 100.0;
-
-	std::cout << "\n position constructor: " << position << "\n";
-	std::cout << "worldpos constructor: " << this->worldposition() << "\n\n";
+	topspeed = 8.0;
+	distance = 0.0;
 }
 
-Player::~Player()
-{
+Player::~Player() {
 
 }
 
-void Player::update(float deltaTime)
-{
-	std::cout << "position update: " << position << "\n";
-	std::cout << "worldpos update: " << this->worldposition() << "\n";
-
+void Player::update(float deltaTime) {
 	// ###############################################################
 	// Movement
 	// ###############################################################
+	movement(deltaTime);
+
+}
+
+void Player::movement(float dt) {
 
 	//Get mouseposition
 	mousePosition = Vector2((float)input()->getMouseX(), (float)input()->getMouseY());
 
 	//If left mouse down
 	if (input()->getMouseDown(0)) {
-		
-		finalDestination = mousePosition; 
+
+		finalDestination = mousePosition;
 		velocity *= 0;
 	}
 
@@ -57,21 +49,18 @@ void Player::update(float deltaTime)
 	distance = sqrt(direction.x * direction.x + direction.y * direction.y);
 	//normalize dir
 	direction = Vector2(direction.x / distance, direction.y / distance);
-	acceleration = direction / 250;
+	acceleration = direction / 100;
 
 	if (distance >= 2.0) {
 
 		//Velocity & acceleration
 		velocity += acceleration;
-		if (velocity.x > topspeed || velocity.y > topspeed)
-		{
-			velocity = Vector2(topspeed, topspeed);
+		if (velocity.x > topspeed || velocity.x < -topspeed || velocity.y > topspeed || velocity.y < -topspeed) {
+			velocity -= acceleration;
 		}
-		position += velocity;
-
-		velocity *= 0.993;
 
 		//Move
-		position += direction * deltaTime * speed;
+		position += velocity * dt * speed;
 	}
 }
+
