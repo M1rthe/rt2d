@@ -180,6 +180,8 @@ IF(MAKE_BLEND)
 		Blend/player.h
 		Blend/myscene.cpp
 		Blend/myscene.h
+		Blend/map.cpp
+		Blend/map.h
 	)
 	target_link_libraries(Blend
 		${ALL_GRAPHICS_LIBS}
