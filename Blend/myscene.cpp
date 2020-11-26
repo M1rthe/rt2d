@@ -14,28 +14,33 @@ MyScene::MyScene() : Scene()
 	// start the timer.
 	t.start();
 
-	map = new Map();
+	//map = new Map();
 
 	player = new Player();
 	player->position = Vector2(SWIDTH / 2, SHEIGHT / 2);
-	player->finalDestination = player->position;			
+	player->finalDestination = player->position;		
+
+	//hud = new Hud();
 
 	// create the scene 'tree'
 	// add myentity to this Scene as a child.
-	this->addChild(map);
+	//this->addChild(map);
 	this->addChild(player);
+	//this->addChild(hud);
 }
 
 
 MyScene::~MyScene()
 {
 	// deconstruct and delete the Tree
-	this->removeChild(map);
+	//this->removeChild(map);
 	this->removeChild(player);
+	//this->removeChild(hud);
 
 	// delete myentity from the heap (there was a 'new' in the constructor)
-	delete map;
+	//delete map;
 	delete player;
+	//delete hud;
 }
 
 void MyScene::update(float deltaTime)

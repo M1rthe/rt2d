@@ -13,11 +13,15 @@
 
 #include "player.h"
 #include "map.h"
+#include "hud.h"
 
 /// @brief The MyScene class is the Scene implementation.
 class MyScene : public Scene
 {
 public:
+	
+	Hud* hud;
+
 	/// @brief Constructor
 	MyScene();
 	/// @brief Destructor

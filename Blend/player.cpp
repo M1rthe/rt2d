@@ -7,6 +7,7 @@
 #include "player.h"
 
 Player::Player() : Entity() {
+
 	this->addSprite("assets/square.tga"); 
 	this->sprite()->color = RED;
 
@@ -14,7 +15,7 @@ Player::Player() : Entity() {
 	acceleration = Vector2(0.0, 0.0);
 	mousePosition = Vector2();
 	direction = Vector2();
-	speed = 100.0;
+	speed = 50.0;
 	topspeed = 8.0;
 	distance = 0.0;
 }
@@ -24,11 +25,7 @@ Player::~Player() {
 }
 
 void Player::update(float deltaTime) {
-	// ###############################################################
-	// Movement
-	// ###############################################################
 	movement(deltaTime);
-
 }
 
 void Player::movement(float dt) {
@@ -48,10 +45,21 @@ void Player::movement(float dt) {
 	//get distance
 	distance = sqrt(direction.x * direction.x + direction.y * direction.y);
 	//normalize dir
-	direction = Vector2(direction.x / distance, direction.y / distance);
-	acceleration = direction / 100;
+	acceleration = Vector2(direction.x / distance, direction.y / distance);
 
-	if (distance >= 2.0) {
+
+	if (distance <= 1.5) { //Standing still
+		acceleration *= 0;
+		velocity *= 0;
+		position = finalDestination;
+		std::cout << "standing still \n";
+	}
+	if (distance > 1.5 && distance <= 8.0) { //Slowing down
+		acceleration *= 0.999; 
+		velocity *= 0.999;
+		std::cout << "slowing down \n";
+	}
+	if (distance > 8.0) { //Moving
 
 		//Velocity & acceleration
 		velocity += acceleration;
@@ -60,7 +68,8 @@ void Player::movement(float dt) {
 		}
 
 		//Move
-		position += velocity * dt * speed;
+		position += velocity * speed * dt; 
+		std::cout << "moving \n";
 	}
 }
 

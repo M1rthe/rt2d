@@ -182,6 +182,12 @@ IF(MAKE_BLEND)
 		Blend/myscene.h
 		Blend/map.cpp
 		Blend/map.h
+		Blend/hud.cpp
+		Blend/hud.h
+        Blend/camouflage.cpp
+        Blend/camouflage.h
+		Blend/camouflagegauge.cpp
+		Blend/camouflagegauge.h
 	)
 	target_link_libraries(Blend
 		${ALL_GRAPHICS_LIBS}

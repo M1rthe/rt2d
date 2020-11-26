@@ -10,20 +10,18 @@
 	
 	 std::cout << "test\n\n";
 
-	/*
 	tilesetSprite = new Sprite();
-	tilesetSprite->setupSpriteTGAPixelBuffer("assets/square2.tga", 0, 0); //assets/square.tga
+	tilesetSprite->setupSpriteTGAPixelBuffer("assets/TileSet_not_compressed.tga", 0, 0); //assets/square.tga
 	PixelBuffer* tileset = tilesetSprite->texture()->pixels();
 	int w = tileset->width;
 	int h = tileset->height;
 	
 	std::cout << "\n\width: " << w << " (" << (w / 32) << " tiles)\n";
 	std::cout << "height: " << h << " (" << (h / 32) << " tiles)\n\n";
-	*/
 }
 
 Map::~Map() {
-	//delete tilesetSprite;
+	delete tilesetSprite;
 }
 
 void Map::update(float deltaTime) {

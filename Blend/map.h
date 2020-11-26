@@ -29,7 +29,7 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-	//Sprite *tilesetSprite;
+	Sprite *tilesetSprite;
 };
 
 #endif /* MAP_H */
