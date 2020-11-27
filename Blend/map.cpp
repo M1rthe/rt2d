@@ -11,7 +11,7 @@
 	 std::cout << "test\n\n";
 
 	tilesetSprite = new Sprite();
-	tilesetSprite->setupSpriteTGAPixelBuffer("assets/TileSet_not_compressed.tga", 0, 0); //assets/square.tga
+	tilesetSprite->setupSpriteTGAPixelBuffer("assets/TileSet_not_compressed.tga", 0, 0); 
 	PixelBuffer* tileset = tilesetSprite->texture()->pixels();
 	int w = tileset->width;
 	int h = tileset->height;

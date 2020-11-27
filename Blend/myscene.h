@@ -38,6 +38,9 @@ private:
 	Player* player;
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
+
+	Vector2 mousePosition;
+	bool mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s);
 };
 
 #endif /* SCENE00_H */

@@ -33,13 +33,6 @@ void Player::movement(float dt) {
 	//Get mouseposition
 	mousePosition = Vector2((float)input()->getMouseX(), (float)input()->getMouseY());
 
-	//If left mouse down
-	if (input()->getMouseDown(0)) {
-
-		finalDestination = mousePosition;
-		velocity *= 0;
-	}
-
 	//get direction
 	direction = (finalDestination - Vector2(position.x, position.y));
 	//get distance
@@ -52,12 +45,10 @@ void Player::movement(float dt) {
 		acceleration *= 0;
 		velocity *= 0;
 		position = finalDestination;
-		std::cout << "standing still \n";
 	}
 	if (distance > 1.5 && distance <= 8.0) { //Slowing down
 		acceleration *= 0.999; 
 		velocity *= 0.999;
-		std::cout << "slowing down \n";
 	}
 	if (distance > 8.0) { //Moving
 
@@ -69,7 +60,12 @@ void Player::movement(float dt) {
 
 		//Move
 		position += velocity * speed * dt; 
-		std::cout << "moving \n";
 	}
+}
+
+void Player::newDestination(Vector2 d) {
+	finalDestination = d;
+	finalDestination = mousePosition;
+	velocity *= 0;
 }
 

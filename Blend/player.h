@@ -10,20 +10,22 @@
 #define PLAYER_H
 
 #include <rt2d/entity.h>
-#include <rt2d/pointx.h>
 #include <cmath>
+#include <rt2d/pointx.h>
 
 /// @brief The MyEntity class is the Entity implementation.
 class Player : public Entity
 {
 public:
 
-	Vector2 finalDestination;
 
 	/// @brief Constructor
 	Player();
 	/// @brief Destructor
 	virtual ~Player();
+
+	Vector2 finalDestination;
+	void newDestination(Vector2 d);
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
