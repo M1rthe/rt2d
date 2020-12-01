@@ -20,6 +20,8 @@ MyScene::MyScene() : Scene()
 	player->position = Vector2(SWIDTH / 2, SHEIGHT / 2);
 	player->finalDestination = player->position;		
 
+	camera = new Camera();
+
 	hud = new Hud();
 
 	// create the scene 'tree'
@@ -41,6 +43,7 @@ MyScene::~MyScene()
 	delete map;
 	delete player;
 	delete hud;
+	delete camera;
 }
 
 void MyScene::update(float deltaTime)
@@ -60,6 +63,12 @@ void MyScene::update(float deltaTime)
 		player->sprite()->color = Color::rotate(color, 0.01f);
 		t.start();
 	}
+
+	// ###############################################################
+	// Camera
+	// ###############################################################
+	camera->position = Point(player->position.x, player->position.y);
+	std::cout << "camera pos " << camera->position << "\n";
 
 	// ###############################################################
 	// Manage clickevents

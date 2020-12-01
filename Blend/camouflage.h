@@ -6,23 +6,23 @@
  * @brief description of MyEntity behavior.
  */
 
-#ifndef MAP_H
-#define MAP_H
+#ifndef CAMOUFLAGE_H
+#define CAMOUFLAGE_H
 
 #include <rt2d/entity.h>
 #include <rt2d/pointx.h>
-#include <rt2d/sprite.h>
-#include "grid.h"
 
  /// @brief The MyEntity class is the Entity implementation.
-class Map : public Entity
+class Camouflage : public Entity
 {
 public:
 
+	int type;
+
 	/// @brief Constructor
-	Map();
+	Camouflage(int _type);
 	/// @brief Destructor
-	virtual ~Map();
+	virtual ~Camouflage();
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
@@ -30,13 +30,7 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-	int gridwidth;
-	int gridheight;
-	int cellwidth;
-	int cellheight;
-	Grid* grid;
-	Sprite* tilesetSprite;
-	Sprite* tileMap;
+
 };
 
-#endif /* MAP_H */
+#endif /* CAMOUFLAGE_H */

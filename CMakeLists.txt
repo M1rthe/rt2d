@@ -6,7 +6,7 @@ project (rt2d)
 ####################################################################
 OPTION(MAKE_START "Make RT2D start application" OFF)
 OPTION(MAKE_BLEND "Make RT2D Blend application" ON)
-OPTION(MAKE_DEMO "Make RT2D demo (tests) application" OFF)
+OPTION(MAKE_DEMO "Make RT2D demo (tests) application" ON)
 OPTION(MAKE_CANVAS_DEMO "Make RT2D Canvas demo (tests) application" OFF)
 OPTION(MAKE_FLOCKING "Make flocking application" OFF)
 OPTION(MAKE_BASIC3D "Make basic3D application" OFF)
@@ -184,8 +184,10 @@ IF(MAKE_BLEND)
 		Blend/map.h
 		Blend/hud.cpp
 		Blend/hud.h
-        Blend/camouflage.cpp
-        Blend/camouflage.h
+		Blend/grid.cpp
+		Blend/grid.h
+        	Blend/camouflage.cpp
+        	Blend/camouflage.h
 		Blend/camouflagegauge.cpp
 		Blend/camouflagegauge.h
 	)
