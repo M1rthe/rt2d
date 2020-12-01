@@ -33,6 +33,7 @@ public:
 	virtual void update(float deltaTime);
 
 private:
+
 	void movement(float dt);
 
 	Vector2 velocity;

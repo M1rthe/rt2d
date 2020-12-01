@@ -30,9 +30,6 @@ void Player::update(float deltaTime) {
 
 void Player::movement(float dt) {
 
-	//Get mouseposition
-	mousePosition = Vector2((float)input()->getMouseX(), (float)input()->getMouseY());
-
 	//get direction
 	direction = (finalDestination - Vector2(position.x, position.y));
 	//get distance
@@ -65,7 +62,6 @@ void Player::movement(float dt) {
 
 void Player::newDestination(Vector2 d) {
 	finalDestination = d;
-	finalDestination = mousePosition;
 	velocity *= 0;
 }
 

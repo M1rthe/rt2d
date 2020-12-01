@@ -20,8 +20,6 @@ MyScene::MyScene() : Scene()
 	player->position = Vector2(SWIDTH / 2, SHEIGHT / 2);
 	player->finalDestination = player->position;		
 
-	camera = new Camera();
-
 	hud = new Hud();
 
 	// create the scene 'tree'
@@ -43,7 +41,6 @@ MyScene::~MyScene()
 	delete map;
 	delete player;
 	delete hud;
-	delete camera;
 }
 
 void MyScene::update(float deltaTime)
@@ -65,15 +62,9 @@ void MyScene::update(float deltaTime)
 	}
 
 	// ###############################################################
-	// Camera
-	// ###############################################################
-	camera->position = Point(player->position.x, player->position.y);
-	std::cout << "camera pos " << camera->position << "\n";
-
-	// ###############################################################
 	// Manage clickevents
 	// ###############################################################
-	mousePosition = Vector2((float)input()->getMouseX(), (float)input()->getMouseY());
+	mousePosition = Vector2(Vector2(input()->getMouseX() + camera()->position.x - SWIDTH / 2, input()->getMouseY() + camera()->position.y - SHEIGHT / 2));
 
 	if (input()->getMouseDown(0)) {
 
@@ -82,9 +73,16 @@ void MyScene::update(float deltaTime)
 		else if (mouseIsOn(mousePosition, hud->camouflage3->worldposition(), Vector2(hud->camouflage3->sprite()->width(), hud->camouflage3->sprite()->height()))) { hud->clickedCamouflage3(); }
 		else if (!mouseIsOn(mousePosition, hud->camouflagegauge->worldposition(), Vector2(hud->camouflagegauge->sprite()->width(), hud->camouflagegauge->sprite()->height()))) {
 			player->newDestination(mousePosition);
+			std::cout << "mousePosition: " << mousePosition;
 		}
-
 	}
+
+	// ###############################################################
+	// Camera
+	// ###############################################################
+	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
+	this->camera()->position = player->position;
+	this->camera()->position.z = 650;
 }
 
 bool MyScene::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
