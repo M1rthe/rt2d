@@ -46,19 +46,14 @@ MyScene::~MyScene()
 void MyScene::update(float deltaTime)
 {
 	// ###############################################################
-	// Escape key stops the Scene
+	// Manage keyboard events
 	// ###############################################################
 	if (input()->getKeyUp(KeyCode::Escape)) {
 		this->stop();
 	}
 
-	// ###############################################################
-	// Rotate color
-	// ###############################################################
-	if (t.seconds() > 0.0333f) {
-		RGBAColor color = player->sprite()->color;
-		player->sprite()->color = Color::rotate(color, 0.01f);
-		t.start();
+	if (input()->getKeyUp(KeyCode::C)) {
+		player->consume();
 	}
 
 	// ###############################################################
@@ -71,9 +66,9 @@ void MyScene::update(float deltaTime)
 		if (mouseIsOn(mousePosition, hud->camouflage1->worldposition(), Vector2(hud->camouflage1->sprite()->width(), hud->camouflage1->sprite()->height()))) { hud->clickedCamouflage1(); }
 		else if (mouseIsOn(mousePosition, hud->camouflage2->worldposition(), Vector2(hud->camouflage2->sprite()->width(), hud->camouflage2->sprite()->height()))) { hud->clickedCamouflage2(); }
 		else if (mouseIsOn(mousePosition, hud->camouflage3->worldposition(), Vector2(hud->camouflage3->sprite()->width(), hud->camouflage3->sprite()->height()))) { hud->clickedCamouflage3(); }
+		
 		else if (!mouseIsOn(mousePosition, hud->camouflagegauge->worldposition(), Vector2(hud->camouflagegauge->sprite()->width(), hud->camouflagegauge->sprite()->height()))) {
 			player->newDestination(mousePosition);
-			std::cout << "mousePosition: " << mousePosition;
 		}
 	}
 

@@ -11,7 +11,6 @@
 
 #include <rt2d/entity.h>
 #include <rt2d/pointx.h>
-#include <rt2d/sprite.h>
 #include "grid.h"
 
  /// @brief The MyEntity class is the Entity implementation.
@@ -35,8 +34,6 @@ private:
 	int cellwidth;
 	int cellheight;
 	Grid* grid;
-	Sprite* tilesetSprite;
-	Sprite* tileMap;
 };
 
 #endif /* MAP_H */

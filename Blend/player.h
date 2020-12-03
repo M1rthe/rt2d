@@ -12,6 +12,10 @@
 #include <rt2d/entity.h>
 #include <cmath>
 #include <rt2d/pointx.h>
+#include "grid.h"
+#include <rt2d/timer.h>
+#include <string>
+using namespace std;
 
 /// @brief The MyEntity class is the Entity implementation.
 class Player : public Entity
@@ -26,6 +30,7 @@ public:
 
 	Vector2 finalDestination;
 	void newDestination(Vector2 d);
+	void consume();
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
@@ -34,7 +39,15 @@ public:
 
 private:
 
-	void movement(float dt);
+	void movement(float dt, string keyOrClick);
+	void animation();
+
+	Timer time;
+	double nextActionTime = 0.0;
+	double timeFirstStickedOutTongue = 0.0;
+	string facing = "right";
+	bool isMoving = false;
+	bool tongueIsStickedOut = false;
 
 	Vector2 velocity;
 	Vector2 acceleration;

@@ -6,6 +6,7 @@ project (rt2d)
 ####################################################################
 OPTION(MAKE_START "Make RT2D start application" OFF)
 OPTION(MAKE_BLEND "Make RT2D Blend application" ON)
+OPTION(MAKE_TILEMAPMAKER "Make RT2D tilemapmaker application" OFF)
 OPTION(MAKE_DEMO "Make RT2D demo (tests) application" ON)
 OPTION(MAKE_CANVAS_DEMO "Make RT2D Canvas demo (tests) application" OFF)
 OPTION(MAKE_FLOCKING "Make flocking application" OFF)
@@ -197,6 +198,29 @@ IF(MAKE_BLEND)
 	# Copy assets to the build directory
 	file(
 		COPY Blend/assets
+		DESTINATION ${CMAKE_BINARY_DIR}
+	)
+ENDIF()
+
+####################################################################
+# TileMapMaker                                                     #
+####################################################################
+IF(MAKE_BLEND)
+	add_executable(TileMapMaker                                                            
+		TileMapMaker/main.cpp
+		TileMapMaker/myscene.cpp
+		TileMapMaker/myscene.h
+		TileMapMaker/basicentity.cpp
+		TileMapMaker/basicentity.h
+		TileMapMaker/superscene.cpp
+		TileMapMaker/superscene.h
+	)
+	target_link_libraries(TileMapMaker
+		${ALL_GRAPHICS_LIBS}
+	)
+	# Copy assets to the build directory
+	file(
+		COPY TileMapMaker/assets
 		DESTINATION ${CMAKE_BINARY_DIR}
 	)
 ENDIF()
