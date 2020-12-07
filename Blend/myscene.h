@@ -40,7 +40,7 @@ private:
 	Timer t;
 
 	Vector2 mousePosition;
-	bool mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s);
+	bool mouseIsOn(Vector2 position, Vector2 withinPos, Vector2 s);
 };
 
 #endif /* SCENE00_H */

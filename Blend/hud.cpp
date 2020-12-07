@@ -30,6 +30,10 @@ Hud::Hud() : Entity() {
 	camouflage2->position = Vector2(SWIDTH - (margin * 2) - (size/2 * 1.0), SHEIGHT - margin);
 	camouflage3->position = Vector2(SWIDTH - (margin * 3) - (size/2 * 2.0), SHEIGHT - margin);
 	camouflagegauge->position = Vector2(margin, SHEIGHT - margin);
+
+	camouflage1->setCamouflage("grass");
+	camouflage2->setCamouflage("grass");
+	camouflage3->setCamouflage("grass");
 }
 
 Hud::~Hud() {

@@ -7,9 +7,7 @@
 #include "camouflagegauge.h"
 
 Camouflagegauge::Camouflagegauge() : Entity() {
-
-	this->addSprite("assets/square.tga");
-	this->sprite()->color = BLUE;
+	this->addSprite("assets/camouflageButton.tga");
 }
 
 Camouflagegauge::~Camouflagegauge() {

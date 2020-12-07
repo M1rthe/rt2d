@@ -11,6 +11,8 @@
 
 #include <rt2d/entity.h>
 #include <rt2d/pointx.h>
+#include <string>
+using namespace std;
 
  /// @brief The MyEntity class is the Entity implementation.
 class Camouflage : public Entity
@@ -18,6 +20,7 @@ class Camouflage : public Entity
 public:
 
 	int type;
+	void setCamouflage(string tile);
 
 	/// @brief Constructor
 	Camouflage(int _type);
@@ -30,7 +33,6 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-
 };
 
 #endif /* CAMOUFLAGE_H */

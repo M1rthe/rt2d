@@ -9,10 +9,7 @@
 Camouflage::Camouflage(int _type) : Entity() {
 	type = _type;
 
-	std::cout << "add sprite to camouflage" << type << "\n";
-
-	this->addSprite("assets/square.tga");
-	this->sprite()->color = RED;
+	this->addSprite("assets/camouflageButton.tga");
 }
 
 Camouflage::~Camouflage() {
@@ -22,5 +19,10 @@ Camouflage::~Camouflage() {
 void Camouflage::update(float deltaTime) {
 
 }
+
+void Camouflage::setCamouflage(string tile) {
+
+}
+
 
 

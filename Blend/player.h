@@ -29,8 +29,12 @@ public:
 	virtual ~Player();
 
 	Vector2 finalDestination;
+	string facing = "right";
+	bool isMoving = false;
 	void newDestination(Vector2 d);
 	void consume();
+	void moveByClick(float dt);
+	void moveByKey(float dt, Vector2 dir);
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
@@ -39,14 +43,11 @@ public:
 
 private:
 
-	void movement(float dt, string keyOrClick);
 	void animation();
 
 	Timer time;
 	double nextActionTime = 0.0;
 	double timeFirstStickedOutTongue = 0.0;
-	string facing = "right";
-	bool isMoving = false;
 	bool tongueIsStickedOut = false;
 
 	Vector2 velocity;

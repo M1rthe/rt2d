@@ -12,11 +12,18 @@
 #include <rt2d/entity.h>
 #include <rt2d/pointx.h>
 #include "grid.h"
+#include <string>
+using namespace std;
 
  /// @brief The MyEntity class is the Entity implementation.
 class Map : public Entity
 {
 public:
+
+	int gridwidth;
+	int gridheight;
+	int cellwidth;
+	int cellheight;
 
 	/// @brief Constructor
 	Map();
@@ -29,10 +36,6 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-	int gridwidth;
-	int gridheight;
-	int cellwidth;
-	int cellheight;
 	Grid* grid;
 };
 

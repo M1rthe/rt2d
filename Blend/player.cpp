@@ -42,7 +42,7 @@ Player::~Player() {
 }
 
 void Player::update(float deltaTime) {
-	movement(deltaTime, "key"); //click or key
+	//movement(deltaTime, "key"); //click or key
 	animation();
 
 	if (tongueIsStickedOut) {
@@ -98,78 +98,56 @@ void Player::animation() {
 	}
 }
 
-void Player::movement(float dt, string keyOrClick) {
+void Player::moveByKey(float dt, Vector2 dir) {
+	speed = 200.0;
+	position += dir * speed * dt;
+}
 
-	if (keyOrClick == "key")
-	{
-		speed = 200.0;
-		isMoving = true;
-		if (input()->getKey(KeyCode::W)) {
-			position.y -= speed * dt;
-		}
-		if (input()->getKey(KeyCode::A)) {
-			position.x -= speed * dt;
-			facing = "left";
-			std::cout << "moving left \n";
-		}
-		if (input()->getKey(KeyCode::S)) {
-			position.y += speed * dt;
-		}
-		if (input()->getKey(KeyCode::D)) {
-			position.x += speed * dt;
-			facing = "right";
-		}
-		if (!input()->getKey(KeyCode::W) && !input()->getKey(KeyCode::A) && !input()->getKey(KeyCode::S) && !input()->getKey(KeyCode::D)) {
-			isMoving = false;
-		}
+void Player::moveByClick(float dt) {
+
+	//get direction
+	direction = (finalDestination - Vector2(position.x, position.y));
+	//get distance
+	distance = sqrt(direction.x * direction.x + direction.y * direction.y);
+	//normalize dir
+	acceleration = Vector2(direction.x / distance, direction.y / distance);
+
+
+	if (distance <= 1.5) { //Standing still
+		acceleration *= 0;
+		velocity *= 0;
+		position = finalDestination;
+
+		//Animation
+		isMoving = false;
 	}
 
-	if (keyOrClick == "click")
-	{
-		//get direction
-		direction = (finalDestination - Vector2(position.x, position.y));
-		//get distance
-		distance = sqrt(direction.x * direction.x + direction.y * direction.y);
-		//normalize dir
-		acceleration = Vector2(direction.x / distance, direction.y / distance);
+	if (distance > 1.5 && distance <= 8.0) { //Slowing down
+		acceleration *= 0.999;
+		velocity *= 0.999;
 
+		//Animation
+		isMoving = false;
+	}
 
-		if (distance <= 1.5) { //Standing still
-			acceleration *= 0;
-			velocity *= 0;
-			position = finalDestination;
+	if (distance > 8.0) { //Moving
 
-			//Animation
-			isMoving = false;
+		//Velocity & acceleration
+		velocity += acceleration;
+		if (velocity.x > topspeed || velocity.x < -topspeed || velocity.y > topspeed || velocity.y < -topspeed) {
+			velocity -= acceleration;
 		}
 
-		if (distance > 1.5 && distance <= 8.0) { //Slowing down
-			acceleration *= 0.999;
-			velocity *= 0.999;
+		//Move
+		position += velocity * speed * dt;
 
-			//Animation
-			isMoving = false;
+
+		//Animation
+		isMoving = true;
+		if (velocity.x > 0) {
+			facing = "right";
 		}
-
-		if (distance > 8.0) { //Moving
-
-			//Velocity & acceleration
-			velocity += acceleration;
-			if (velocity.x > topspeed || velocity.x < -topspeed || velocity.y > topspeed || velocity.y < -topspeed) {
-				velocity -= acceleration;
-			}
-
-			//Move
-			position += velocity * speed * dt;
-
-
-			//Animation
-			isMoving = true;
-			if (velocity.x > 0) {
-				facing = "right";
-			}
-			else { facing = "left"; }
-		}
+		else { facing = "left"; }
 	}
 }
 
