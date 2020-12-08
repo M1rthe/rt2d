@@ -6,8 +6,8 @@
  * @brief description of MyScene behavior.
  */
 
-#ifndef MYSCENE_H
-#define MYSCENE_H
+#ifndef LEVEL1_H
+#define LEVEL1_H
 
 #include <rt2d/scene.h>
 #include <rt2d/camera.h>
@@ -15,17 +15,17 @@
 #include "map.h"
 #include "hud.h"
 
-/// @brief The MyScene class is the Scene implementation.
-class MyScene : public Scene
+ /// @brief The MyScene class is the Scene implementation.
+class Level1 : public Scene
 {
 public:
-	
+
 	Hud* hud;
 
 	/// @brief Constructor
-	MyScene();
+	Level1();
 	/// @brief Destructor
-	virtual ~MyScene();
+	virtual ~Level1();
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
@@ -38,9 +38,10 @@ private:
 	Player* player;
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
+	int currentCamouflage = 1;
 
 	Vector2 mousePosition;
 	bool mouseIsOn(Vector2 position, Vector2 withinPos, Vector2 s);
 };
 
-#endif /* SCENE00_H */
+#endif /* LEVEL1_H */

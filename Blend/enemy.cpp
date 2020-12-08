@@ -4,17 +4,17 @@
  * Copyright 2015 Your Name <you@yourhost.com>
  */
 
-#include "grid.h"
+#include "enemy.h"
 
-Grid::Grid() : Entity() {
-
-}
-
-Grid::~Grid() {
+Enemy::Enemy() : Entity() {
 
 }
 
-void Grid::update(float deltaTime) {
+Enemy::~Enemy() {
+
+}
+
+void Enemy::update(float deltaTime) {
 
 }
 

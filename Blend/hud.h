@@ -36,10 +36,6 @@ public:
 	/// @return void
 	virtual void update(float deltaTime);
 
-	void clickedCamouflage1();
-	void clickedCamouflage2();
-	void clickedCamouflage3();
-
 private:
 
 	float margin;

@@ -11,7 +11,7 @@
 
 #include <rt2d/entity.h>
 #include <rt2d/pointx.h>
-#include "grid.h"
+#include "basicentity.h"
 #include <string>
 using namespace std;
 
@@ -36,7 +36,7 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-	Grid* grid;
+	BasicEntity* grid;
 };
 
 #endif /* MAP_H */

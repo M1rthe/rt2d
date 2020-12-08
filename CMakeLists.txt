@@ -175,21 +175,23 @@ ENDIF()
 ####################################################################
 IF(MAKE_BLEND)
 	add_executable(Blend
-		Blend/main.cpp
-		Blend/player.cpp
-		Blend/player.h
-		Blend/myscene.cpp
-		Blend/myscene.h
-		Blend/map.cpp
-		Blend/map.h
-		Blend/hud.cpp
-		Blend/hud.h
-		Blend/grid.cpp
-		Blend/grid.h
-        	Blend/camouflage.cpp
-        	Blend/camouflage.h
+		Blend/basicentity.cpp
+		Blend/basicentity.h
+		Blend/camouflage.cpp
+		Blend/camouflage.h
 		Blend/camouflagegauge.cpp
 		Blend/camouflagegauge.h
+		Blend/enemy.cpp
+		Blend/enemy.h
+		Blend/hud.cpp
+		Blend/hud.h
+		Blend/level1.cpp
+		Blend/level1.h
+		Blend/main.cpp
+		Blend/map.cpp
+		Blend/map.h
+		Blend/player.cpp
+		Blend/player.h
 	)
 	target_link_libraries(Blend
 		${ALL_GRAPHICS_LIBS}

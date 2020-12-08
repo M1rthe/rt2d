@@ -18,7 +18,7 @@ Player::Player() : Entity() {
 	topspeed = 8.0;
 	distance = 0.0;
 
-	this->addSpriteSheet("assets/kameleonAnimated.tga", 2, 4);
+	this->addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4);
 	this->sprite()->filter(0);
 	this->scale = Point2(5, 5);
 	this->sprite()->frame(6);

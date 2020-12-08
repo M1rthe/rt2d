@@ -59,17 +59,5 @@ void Hud::update(float deltaTime) {
 
 }
 
-void Hud::clickedCamouflage1() {
-	std::cout << "clicked camouflage 1\n";
-}
-
-void Hud::clickedCamouflage2() {
-	std::cout << "clicked camouflage 2\n";
-}
-
-void Hud::clickedCamouflage3() {
-	std::cout << "clicked camouflage 3\n";
-}
-
 
 

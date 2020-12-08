@@ -7,9 +7,9 @@
 #include <fstream>
 #include <sstream>
 
-#include "myscene.h"
+#include "level1.h"
 
-MyScene::MyScene() : Scene()
+Level1::Level1() : Scene()
 {
 	// start the timer.
 	t.start();
@@ -18,7 +18,7 @@ MyScene::MyScene() : Scene()
 
 	player = new Player();
 	player->position = Vector2(SWIDTH / 2, SHEIGHT / 2);
-	player->finalDestination = player->position;		
+	player->finalDestination = player->position;
 
 	hud = new Hud();
 
@@ -30,7 +30,7 @@ MyScene::MyScene() : Scene()
 }
 
 
-MyScene::~MyScene()
+Level1::~Level1()
 {
 	// deconstruct and delete the Tree
 	this->removeChild(map);
@@ -43,8 +43,8 @@ MyScene::~MyScene()
 	delete hud;
 }
 
-void MyScene::update(float deltaTime)
-{
+void Level1::update(float deltaTime) {
+
 	// ###############################################################
 	// Manage keyboard events
 	// ###############################################################
@@ -56,17 +56,17 @@ void MyScene::update(float deltaTime)
 		player->consume();
 	}
 
-	Vector2 dir = Vector2(0,0);
+	Vector2 dir = Vector2(0, 0);
 	player->isMoving = false;
 
 	if (input()->getKey(KeyCode::W) || input()->getKey(KeyCode::Up)) {
-		if (player->position.y -330 >= map->position.y) {
+		if (player->position.y - 330 >= map->position.y) {
 			dir.y = -1;
 			player->isMoving = true;
 		}
 	}
 	if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::Left)) {
-		if (player->position.x -610 >= map->position.x) {
+		if (player->position.x - 610 >= map->position.x) {
 			dir.x = -1;
 			player->facing = "left";
 			player->isMoving = true;
@@ -89,7 +89,6 @@ void MyScene::update(float deltaTime)
 	dir.normalize();
 
 	player->moveByKey(deltaTime, dir);
-	//player->moveByClick(deltaTime);
 
 	// ###############################################################
 	// Manage clickevents
@@ -100,20 +99,31 @@ void MyScene::update(float deltaTime)
 
 		std::cout << "mousedown \n";
 
-		if (mouseIsOn(mousePosition, hud->camouflage1->position+hud->position, Vector2(hud->camouflage1->sprite()->width() * hud->camouflage1->scale.x, hud->camouflage1->sprite()->height() * hud->camouflage1->scale.y))) {
-			hud->clickedCamouflage1();
-			player->addSpriteSheet("assets/kameleonAnimatedGrass.tga", 2, 4);
-			player->sprite()->filter(0);
+		if (mouseIsOn(mousePosition, hud->camouflage1->position + hud->position, Vector2(hud->camouflage1->sprite()->width() * hud->camouflage1->scale.x, hud->camouflage1->sprite()->height() * hud->camouflage1->scale.y))) {
+			if (currentCamouflage != 1) {
+				player->addSpriteSheet("assets/kameleon/kameleonAnimatedGrass.tga", 2, 4);
+				player->sprite()->filter(0);
+
+				currentCamouflage = 1;
+
+				std::cout << "set to camouflage 1";
+			}
 		}
 		else if (mouseIsOn(mousePosition, hud->camouflage2->position + hud->position, Vector2(hud->camouflage2->sprite()->width() * hud->camouflage2->scale.x, hud->camouflage2->sprite()->height() * hud->camouflage2->scale.y))) {
-			hud->clickedCamouflage2();
-			player->addSpriteSheet("assets/kameleonAnimatedBricks.tga", 2, 4);
-			player->sprite()->filter(0);
+			if (currentCamouflage != 2) {
+				player->addSpriteSheet("assets/kameleon/kameleonAnimatedBricks.tga", 2, 4);
+				player->sprite()->filter(0);
+
+				currentCamouflage = 2;
+			}
 		}
 		else if (mouseIsOn(mousePosition, hud->camouflage3->position + hud->position, Vector2(hud->camouflage3->sprite()->width() * hud->camouflage3->scale.x, hud->camouflage3->sprite()->height() * hud->camouflage3->scale.y))) {
-			hud->clickedCamouflage3();
-			player->addSpriteSheet("assets/kameleonAnimated.tga", 2, 4);
-			player->sprite()->filter(0);
+			if (currentCamouflage != 3) {
+				player->addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4);
+				player->sprite()->filter(0);
+
+				currentCamouflage = 3;
+			}
 		}
 		else if (mouseIsOn(mousePosition, hud->camouflagegauge->position + hud->position, Vector2(hud->camouflage3->sprite()->width(), hud->camouflage3->sprite()->height()))) {
 
@@ -131,7 +141,7 @@ void MyScene::update(float deltaTime)
 	this->camera()->position.z = 650;
 }
 
-bool MyScene::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
+bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
 
 	//std::cout << "check if clicking\n";
 	//std::cout << "mousepos: "<< mousePos <<"\n";

@@ -6,20 +6,20 @@
  * @brief description of MyEntity behavior.
  */
 
-#ifndef GRID_H
-#define GRID_H
+#ifndef BASICENTITY_H
+#define BASICENTITY_H
 
 #include <rt2d/entity.h>
 
  /// @brief The MyEntity class is the Entity implementation.
-class Grid : public Entity
+class BasicEntity : public Entity
 {
 public:
 
 	/// @brief Constructor
-	Grid();
+	BasicEntity();
 	/// @brief Destructor
-	virtual ~Grid();
+	virtual ~BasicEntity();
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
@@ -30,4 +30,4 @@ private:
 
 };
 
-#endif /* GRID_H */
+#endif /* BASICENTITY_H */

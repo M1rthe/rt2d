@@ -12,7 +12,7 @@
 #include <rt2d/entity.h>
 #include <cmath>
 #include <rt2d/pointx.h>
-#include "grid.h"
+#include "basicentity.h"
 #include <rt2d/timer.h>
 #include <string>
 using namespace std;

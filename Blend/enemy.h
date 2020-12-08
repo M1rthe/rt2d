@@ -6,25 +6,20 @@
  * @brief description of MyEntity behavior.
  */
 
-#ifndef CAMOUFLAGE_H
-#define CAMOUFLAGE_H
+#ifndef ENEMY_H
+#define ENEMY_H
 
 #include <rt2d/entity.h>
-#include <rt2d/pointx.h>
-
 
  /// @brief The MyEntity class is the Entity implementation.
-class Camouflage : public Entity
+class Enemy : public Entity
 {
 public:
 
-	int type;
-	void setCamouflage(int tile);
-
 	/// @brief Constructor
-	Camouflage(int _type);
+	Enemy();
 	/// @brief Destructor
-	virtual ~Camouflage();
+	virtual ~Enemy();
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
@@ -32,6 +27,7 @@ public:
 	virtual void update(float deltaTime);
 
 private:
+
 };
 
-#endif /* CAMOUFLAGE_H */
+#endif /* ENEMY_H */

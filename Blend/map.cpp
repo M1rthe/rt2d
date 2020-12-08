@@ -13,7 +13,7 @@
 	cellwidth = 64;
 	cellheight = 64;
 
-	grid = new Grid();
+	grid = new BasicEntity();
 	grid->addGrid("assets/mytileset.tga", 8, 8, gridwidth, gridheight, cellwidth, cellheight);
 
 	int tileCounter = 0;
