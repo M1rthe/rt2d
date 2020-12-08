@@ -45,6 +45,8 @@ Level1::~Level1()
 
 void Level1::update(float deltaTime) {
 
+	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
+
 	// ###############################################################
 	// Manage keyboard events
 	// ###############################################################
@@ -60,20 +62,13 @@ void Level1::update(float deltaTime) {
 	player->isMoving = false;
 
 	if (input()->getKey(KeyCode::W) || input()->getKey(KeyCode::Up)) {
-		if (player->position.y - 330 >= map->position.y) {
+		if (player->position.y - 335 >= map->position.y) {
 			dir.y = -1;
 			player->isMoving = true;
 		}
 	}
-	if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::Left)) {
-		if (player->position.x - 610 >= map->position.x) {
-			dir.x = -1;
-			player->facing = "left";
-			player->isMoving = true;
-		}
-	}
 	if (input()->getKey(KeyCode::S) || input()->getKey(KeyCode::Down)) {
-		if (player->position.y + 390 <= map->position.y + (map->cellheight * map->gridheight)) {
+		if (player->position.y + 395 <= map->position.y + (map->cellheight * map->gridheight)) {
 			dir.y = 1;
 			player->isMoving = true;
 		}
@@ -82,6 +77,13 @@ void Level1::update(float deltaTime) {
 		if (player->position.x + 670 <= map->position.x + (map->cellwidth * map->gridwidth)) {
 			dir.x = 1;
 			player->facing = "right";
+			player->isMoving = true;
+		}
+	}
+	if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::Left)) {
+		if (player->position.x - 615 >= map->position.x) {
+			dir.x = -1;
+			player->facing = "left";
 			player->isMoving = true;
 		}
 	}
@@ -136,7 +138,7 @@ void Level1::update(float deltaTime) {
 	// ###############################################################
 	// Camera
 	// ###############################################################
-	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
+
 	this->camera()->position = player->position;
 	this->camera()->position.z = 650;
 }
