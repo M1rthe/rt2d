@@ -98,11 +98,27 @@ void MyScene::update(float deltaTime)
 
 	if (input()->getMouseDown(0)) {
 
-		if (mouseIsOn(mousePosition, hud->camouflage1->worldposition(), Vector2(hud->camouflage1->sprite()->width(), hud->camouflage1->sprite()->height()))) { hud->clickedCamouflage1(); }
-		else if (mouseIsOn(mousePosition, hud->camouflage2->worldposition(), Vector2(hud->camouflage2->sprite()->width(), hud->camouflage2->sprite()->height()))) { hud->clickedCamouflage2(); }
-		else if (mouseIsOn(mousePosition, hud->camouflage3->worldposition(), Vector2(hud->camouflage3->sprite()->width(), hud->camouflage3->sprite()->height()))) { hud->clickedCamouflage3(); }
-		
-		else if (!mouseIsOn(mousePosition, hud->camouflagegauge->worldposition(), Vector2(hud->camouflagegauge->sprite()->width(), hud->camouflagegauge->sprite()->height()))) {
+		std::cout << "mousedown \n";
+
+		if (mouseIsOn(mousePosition, hud->camouflage1->position+hud->position, Vector2(hud->camouflage1->sprite()->width() * hud->camouflage1->scale.x, hud->camouflage1->sprite()->height() * hud->camouflage1->scale.y))) {
+			hud->clickedCamouflage1();
+			player->addSpriteSheet("assets/kameleonAnimatedGrass.tga", 2, 4);
+			player->sprite()->filter(0);
+		}
+		else if (mouseIsOn(mousePosition, hud->camouflage2->position + hud->position, Vector2(hud->camouflage2->sprite()->width() * hud->camouflage2->scale.x, hud->camouflage2->sprite()->height() * hud->camouflage2->scale.y))) {
+			hud->clickedCamouflage2();
+			player->addSpriteSheet("assets/kameleonAnimatedBricks.tga", 2, 4);
+			player->sprite()->filter(0);
+		}
+		else if (mouseIsOn(mousePosition, hud->camouflage3->position + hud->position, Vector2(hud->camouflage3->sprite()->width() * hud->camouflage3->scale.x, hud->camouflage3->sprite()->height() * hud->camouflage3->scale.y))) {
+			hud->clickedCamouflage3();
+			player->addSpriteSheet("assets/kameleonAnimated.tga", 2, 4);
+			player->sprite()->filter(0);
+		}
+		else if (mouseIsOn(mousePosition, hud->camouflagegauge->position + hud->position, Vector2(hud->camouflage3->sprite()->width(), hud->camouflage3->sprite()->height()))) {
+
+		}
+		else {
 			player->newDestination(mousePosition);
 		}
 	}
@@ -117,10 +133,16 @@ void MyScene::update(float deltaTime)
 
 bool MyScene::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
 
+	//std::cout << "check if clicking\n";
+	//std::cout << "mousepos: "<< mousePos <<"\n";
+	//std::cout << "entityPos: " << entityPos << "\n";
+	//std::cout << "s: " << s << "\n\n";
+
 	if (mousePos.x >= entityPos.x - s.x / 2 &&
 		mousePos.x <= entityPos.x + s.x / 2 &&
 		mousePos.y >= entityPos.y - s.y / 2 &&
 		mousePos.y <= entityPos.y + s.y / 2) {
+
 		return true;
 	}
 

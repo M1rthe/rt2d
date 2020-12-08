@@ -12,6 +12,7 @@
 #include <rt2d/entity.h>
 #include <rt2d/pointx.h>
 #include <string>
+#include "grid.h"
 using namespace std;
 
  /// @brief The MyEntity class is the Entity implementation.
@@ -20,7 +21,7 @@ class Camouflage : public Entity
 public:
 
 	int type;
-	void setCamouflage(string tile);
+	void setCamouflage(int tile);
 
 	/// @brief Constructor
 	Camouflage(int _type);
