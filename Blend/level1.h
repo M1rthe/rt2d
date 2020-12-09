@@ -39,6 +39,7 @@ private:
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
 	int currentCamouflage = 1;
+	bool moveByKey = true;
 
 	Vector2 mousePosition;
 	bool mouseIsOn(Vector2 position, Vector2 withinPos, Vector2 s);

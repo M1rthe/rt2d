@@ -29,12 +29,13 @@ public:
 	virtual ~Player();
 
 	Vector2 finalDestination;
+	Vector2 direction;
 	string facing = "right";
 	bool isMoving = false;
 	void newDestination(Vector2 d);
 	void consume();
 	void moveByClick(float dt);
-	void moveByKey(float dt, Vector2 dir);
+	void moveByKey(float dt, Vector2 dir, bool _isMoving, string _facing);
 
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
@@ -53,7 +54,6 @@ private:
 	Vector2 velocity;
 	Vector2 acceleration;
 	Vector2 mousePosition;
-	Vector2 direction;
 	float speed;
 	float topspeed;
 	float distance;

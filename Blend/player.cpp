@@ -98,9 +98,12 @@ void Player::animation() {
 	}
 }
 
-void Player::moveByKey(float dt, Vector2 dir) {
-	speed = 200.0;
+void Player::moveByKey(float dt, Vector2 dir, bool _isMoving, string _facing) {
+	speed = 250.0;
 	position += dir * speed * dt;
+
+	isMoving = _isMoving;
+	facing = _facing;
 }
 
 void Player::moveByClick(float dt) {

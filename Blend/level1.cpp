@@ -22,6 +22,8 @@ Level1::Level1() : Scene()
 
 	hud = new Hud();
 
+	moveByKey = false;
+
 	// create the scene 'tree'
 	// add myentity to this Scene as a child.
 	this->addChild(map);
@@ -58,39 +60,75 @@ void Level1::update(float deltaTime) {
 		player->consume();
 	}
 
-	Vector2 dir = Vector2(0, 0);
-	player->isMoving = false;
+	if (moveByKey) {
+		Vector2 dir = Vector2(0, 0);
+		bool isMoving = false;
+		string facing = player->facing;
 
-	if (input()->getKey(KeyCode::W) || input()->getKey(KeyCode::Up)) {
-		if (player->position.y - 335 >= map->position.y) {
-			dir.y = -1;
-			player->isMoving = true;
-		}
-	}
-	if (input()->getKey(KeyCode::S) || input()->getKey(KeyCode::Down)) {
-		if (player->position.y + 395 <= map->position.y + (map->cellheight * map->gridheight)) {
-			dir.y = 1;
-			player->isMoving = true;
-		}
-	}
-	if (input()->getKey(KeyCode::D) || input()->getKey(KeyCode::Right)) {
-		if (player->position.x + 670 <= map->position.x + (map->cellwidth * map->gridwidth)) {
-			dir.x = 1;
-			player->facing = "right";
-			player->isMoving = true;
-		}
-	}
-	if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::Left)) {
-		if (player->position.x - 615 >= map->position.x) {
-			dir.x = -1;
-			player->facing = "left";
-			player->isMoving = true;
-		}
-	}
+		if (input()->getKey(KeyCode::W) || input()->getKey(KeyCode::Up)) {
 
-	dir.normalize();
+			if (player->position.y + (player->scale.y * player->sprite()->height() / 2) - 10 >= map->position.y + SHEIGHT / 2) {//+ (player->scale.y * player->sprite()->height())       //+ ((map->cellheight * map->gridheight) / 2)
+				dir.y -= 1;
+				isMoving = true;
+			}
+		}
+		if (input()->getKey(KeyCode::S) || input()->getKey(KeyCode::Down)) {
+			if (player->position.y + (player->scale.y * player->sprite()->height() / 2) - 10 <= map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight)) {
+				dir.y += 1;
+				isMoving = true;
+			}
+		}
+		if (input()->getKey(KeyCode::D) || input()->getKey(KeyCode::Right)) {
+			if (player->position.x + (player->scale.x * player->sprite()->width() / 2) - 45 <= map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth)) {
+				dir.x += 1;
+				facing = "right";
+				isMoving = true;
+			}
+		}
+		if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::Left)) {
+			if (player->position.x + (player->scale.x * player->sprite()->width() / 2) - 50 >= map->position.x + SWIDTH / 2) { // (map->cellwidth * map->gridwidth)
+				dir.x -= 1;
+				facing = "left";
+				isMoving = true;
+			}
+		}
 
-	player->moveByKey(deltaTime, dir);
+		if (dir.x == 0) { isMoving = false; facing = player->facing; }
+		if (dir.y == 0) { isMoving = false; }
+
+		dir.normalize();
+
+		player->moveByKey(deltaTime, dir, isMoving, facing);
+	}
+	if (!moveByKey) {
+
+		//top
+		if (player->position.y + (player->scale.y * player->sprite()->height() / 2) - 10 < map->position.y + SHEIGHT / 2) {
+			std::cout << "outside map (TOP) \n";
+			player->finalDestination.y = map->position.y + SHEIGHT / 2 - (player->scale.y * player->sprite()->height() / 2) + 10;
+			player->position.y = map->position.y + SHEIGHT / 2 - (player->scale.y * player->sprite()->height() / 2) + 10;
+		}
+		//bottom
+		if (player->position.y + (player->scale.y * player->sprite()->height() / 2) - 10 > map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight)) {
+			std::cout << "outside map (BOTTOM) \n";
+			player->finalDestination.y = map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight) - (player->scale.y * player->sprite()->height() / 2) + 10;
+			player->position.y = map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight) - (player->scale.y * player->sprite()->height() / 2) + 10;
+		}
+		//right
+		if (player->position.x + (player->scale.x * player->sprite()->width() / 2) - 45 > map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth)) {
+			std::cout << "outside map (RIGHT) \n";
+			player->finalDestination.x = map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth) - (player->scale.x * player->sprite()->width() / 2) + 45;
+			player->position.x = map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth) - (player->scale.x * player->sprite()->width() / 2) + 45;
+		}
+		//left
+		if (player->position.x + (player->scale.x * player->sprite()->width() / 2) - 50 < map->position.x + SWIDTH / 2) {
+			std::cout << "outside map (LEFT) \n";
+			player->finalDestination.x = map->position.x + SWIDTH / 2 - (player->scale.x * player->sprite()->width() / 2) + 50;
+			player->position.x = map->position.x + SWIDTH / 2 - (player->scale.x * player->sprite()->width() / 2) + 50;
+		}
+
+		player->moveByClick(deltaTime);
+	}
 
 	// ###############################################################
 	// Manage clickevents
@@ -98,8 +136,6 @@ void Level1::update(float deltaTime) {
 	mousePosition = Vector2(Vector2(input()->getMouseX() + camera()->position.x - SWIDTH / 2, input()->getMouseY() + camera()->position.y - SHEIGHT / 2));
 
 	if (input()->getMouseDown(0)) {
-
-		std::cout << "mousedown \n";
 
 		if (mouseIsOn(mousePosition, hud->camouflage1->position + hud->position, Vector2(hud->camouflage1->sprite()->width() * hud->camouflage1->scale.x, hud->camouflage1->sprite()->height() * hud->camouflage1->scale.y))) {
 			if (currentCamouflage != 1) {
@@ -144,11 +180,6 @@ void Level1::update(float deltaTime) {
 }
 
 bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
-
-	//std::cout << "check if clicking\n";
-	//std::cout << "mousepos: "<< mousePos <<"\n";
-	//std::cout << "entityPos: " << entityPos << "\n";
-	//std::cout << "s: " << s << "\n\n";
 
 	if (mousePos.x >= entityPos.x - s.x / 2 &&
 		mousePos.x <= entityPos.x + s.x / 2 &&
