@@ -22,7 +22,7 @@ Level1::Level1() : Scene()
 
 	hud = new Hud();
 
-	moveByKey = false;
+	moveByKey = true;
 
 	// create the scene 'tree'
 	// add myentity to this Scene as a child.
@@ -141,6 +141,8 @@ void Level1::update(float deltaTime) {
 			if (currentCamouflage != 1) {
 				player->addSpriteSheet("assets/kameleon/kameleonAnimatedGrass.tga", 2, 4);
 				player->sprite()->filter(0);
+				if (player->facing == "right") { player->sprite()->frame(6); }
+				if (player->facing == "left") { player->sprite()->frame(7); }
 
 				currentCamouflage = 1;
 
@@ -151,6 +153,8 @@ void Level1::update(float deltaTime) {
 			if (currentCamouflage != 2) {
 				player->addSpriteSheet("assets/kameleon/kameleonAnimatedBricks.tga", 2, 4);
 				player->sprite()->filter(0);
+				if (player->facing == "right") { player->sprite()->frame(6); }
+				if (player->facing == "left") { player->sprite()->frame(7); }
 
 				currentCamouflage = 2;
 			}
@@ -159,6 +163,8 @@ void Level1::update(float deltaTime) {
 			if (currentCamouflage != 3) {
 				player->addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4);
 				player->sprite()->filter(0);
+				if (player->facing == "right") { player->sprite()->frame(6); }
+				if (player->facing == "left") { player->sprite()->frame(7); }
 
 				currentCamouflage = 3;
 			}

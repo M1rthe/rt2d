@@ -46,19 +46,23 @@ void Player::update(float deltaTime) {
 	animation();
 
 	if (tongueIsStickedOut) {
-
-		if (facing == "right") { this->sprite()->frame(0); } else { this->sprite()->frame(1); }
+		std::cout << "tongueIsStickedOut is true";
+		if (facing == "right") { this->sprite()->frame(0); } 
+		if (facing == "left") { this->sprite()->frame(1); }
 
 		if (time.seconds() - timeFirstStickedOutTongue > 0.1) {
-			if (facing == "right") { this->sprite()->frame(2); } else { this->sprite()->frame(3); }
+			if (facing == "right") { this->sprite()->frame(2); } 
+			if (facing == "left") { this->sprite()->frame(3); }
 		}
 		if (time.seconds() - timeFirstStickedOutTongue > 0.3) {
-			if (facing == "right") { this->sprite()->frame(0); } else { this->sprite()->frame(1); }
+			if (facing == "right") { this->sprite()->frame(0); } 
+			if (facing == "left") { this->sprite()->frame(1); }
 		}
 		if (time.seconds() - timeFirstStickedOutTongue > 0.4) {
+			//if (facing == "right") { this->sprite()->frame(0); }
+			if (facing == "right") { this->sprite()->frame(6); } 
+			if (facing == "left") { this->sprite()->frame(7); }
 			tongueIsStickedOut = false;
-			if (facing == "right") { this->sprite()->frame(0); }
-			if (facing == "right") { this->sprite()->frame(6); } else { this->sprite()->frame(7); }
 		}
 	}
 }
