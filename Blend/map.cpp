@@ -28,7 +28,6 @@
 			Sprite* tile = grid->spritebatch()[tileCounter];
 			tile->color = RGBAColor(255, 255, 255, 255);
 			tile->frame(0);
-			//tile->filter(0);
 			tileCounter++;
 		}
 	}

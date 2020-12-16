@@ -38,7 +38,7 @@ private:
 	Player* player;
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
-	int currentCamouflage = 1;
+	int currentCamouflage = 3;
 	bool moveByKey = true;
 
 	Vector2 mousePosition;
