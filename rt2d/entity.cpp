@@ -36,7 +36,6 @@ Entity::Entity()
 
 Entity::~Entity()
 {
-	//printf("Entity dtor %d\n", _guid);
 	deleteSprite();
 	deleteLine();
 	deleteSpritebatch();

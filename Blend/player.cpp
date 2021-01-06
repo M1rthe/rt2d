@@ -26,13 +26,10 @@ Player::Player() : Entity() {
 	/*
 	0: tongue1 right
 	1: tongue1 left
-
 	2: tongue2 right
 	3: tongue2 left
-
 	4: walk right
 	5: walk left
-
 	6: idle right
 	7: idle left
 	*/
@@ -103,6 +100,7 @@ void Player::animation() {
 
 void Player::moveByKey(float dt, Vector2 dir) {
 	speed = 250.0;
+	dir.normalize();
 	position += dir * speed * dt;
 }
 
@@ -153,7 +151,7 @@ void Player::moveByClick(float dt) {
 	}
 }
 
-void Player::check4input(float dt, Map *map, bool moveWithKeys) {
+void Player::check4input(float dt, Map* map, bool moveWithKeys) {
 	//Consume
 	if (input()->getKeyUp(KeyCode::C)) {
 		consume();
@@ -217,9 +215,9 @@ void Player::check4input(float dt, Map *map, bool moveWithKeys) {
 }
 
 void Player::clickCamouflage(int c) {
-	if (c == 1) { addSpriteSheet("assets/kameleon/kameleonAnimatedGrass.tga", 2, 4); }
-	if (c == 2) { addSpriteSheet("assets/kameleon/kameleonAnimatedBricks.tga", 2, 4); }
-	if (c == 3) { addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4); }
+	if (c == 1) { addSpriteSheet("assets/kameleon/kameleonAnimatedGrass.tga", 2, 4); camouflageFrame = 0; }
+	if (c == 2) { addSpriteSheet("assets/kameleon/kameleonAnimatedBricks.tga", 2, 4); camouflageFrame = 2; }
+	if (c == 3) { addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4); camouflageFrame = 65; }
 
 	sprite()->filter(0);
 	if (facing == RIGHT) { sprite()->frame(6); }
@@ -237,4 +235,3 @@ void Player::newDestination(Vector2 d) {
 	finalDestination = d;
 	velocity *= 0;
 }
-

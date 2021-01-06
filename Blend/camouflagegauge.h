@@ -11,6 +11,7 @@
 
 #include <rt2d/entity.h>
 #include <rt2d/pointx.h>
+#include <rt2d/text.h>
 
  /// @brief The MyEntity class is the Entity implementation.
 class Camouflagegauge : public Entity
@@ -27,8 +28,9 @@ public:
 	/// @return void
 	virtual void update(float deltaTime);
 
-private:
+	Text* overlappingSpace;
 
+private:
 };
 
 #endif /* CAMOUFLAGEGAUGE_H */

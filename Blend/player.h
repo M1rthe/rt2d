@@ -22,35 +22,28 @@ using namespace std;
 #define LEFT 0 
 #define RIGHT 1
 
-/*
-enum Facing
-{
-	left = 0,
-	right = 1
-};
-*/
-
 /// @brief The MyEntity class is the Entity implementation.
 class Player : public Entity
 {
 public:
-
 
 	/// @brief Constructor
 	Player();
 	/// @brief Destructor
 	virtual ~Player();
 
-	void check4input(float dt, Map *map, bool moveWithKeys);
-	void clickCamouflage(int c);
-	void newDestination(Vector2 d);
-
-	Vector2 finalDestination;
-
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
 	/// @return void
 	virtual void update(float deltaTime);
+
+	void check4input(float dt, Map* map, bool moveWithKeys);
+	void clickCamouflage(int c);
+	void newDestination(Vector2 d);
+
+	int camouflageFrame = 65; //doesnt exists, so its just green, default cameleon
+	Vector2 finalDestination;
+	int facing = RIGHT;
 
 private:
 
@@ -71,7 +64,6 @@ private:
 	float speed;
 	float topspeed;
 	float distance;
-	int facing = RIGHT;
 	bool isMoving = false;
 };
 

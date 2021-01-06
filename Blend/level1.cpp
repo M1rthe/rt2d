@@ -47,6 +47,15 @@ Level1::~Level1()
 
 void Level1::update(float deltaTime) {
 
+	int overlapping = map->findMostOverlappedTile(Vector2(player->position.x, player->position.y + 10), Vector2(player->scale.x * player->sprite()->size.x, player->scale.y * player->sprite()->size.y - 20), player->camouflageFrame, player->facing);
+	if (overlapping > 34) { 
+		hud->camouflagegauge->overlappingSpace->message("HIDDEN");
+	} else { 
+		hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN");
+	}
+
+	//dhud->camouflagegauge->overlappingSpace->message(to_string(overlapping));
+
 	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
 
 	if (input()->getKeyUp(KeyCode::Escape)) {
@@ -61,7 +70,7 @@ void Level1::update(float deltaTime) {
 	mousePosition = Vector2(Vector2(input()->getMouseX() + camera()->position.x - SWIDTH / 2, input()->getMouseY() + camera()->position.y - SHEIGHT / 2));
 
 	if (input()->getMouseDown(0)) {
-		std::cout << "mouseDown\n";
+
 		if (mouseIsOn(mousePosition, hud->camouflage1->position + hud->position, Vector2(hud->camouflage1->sprite()->width() * hud->camouflage1->scale.x, hud->camouflage1->sprite()->height() * hud->camouflage1->scale.y))) {
 			if (currentCamouflage != 1) {
 				player->clickCamouflage(1);

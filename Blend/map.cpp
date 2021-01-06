@@ -6,8 +6,8 @@
 
 #include "map.h"
 
- Map::Map() : Entity() {
-	
+Map::Map() : Entity() {
+
 	gridwidth = 64;
 	gridheight = 16;
 	cellwidth = 64;
@@ -33,25 +33,6 @@
 	}
 
 	addChild(grid);
-
-	string level[1024] = { //64 x 16
-		"g","d","b","w","c","cr","co","cy","cg","cb","cm","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","cb",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-		"g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g","g",
-	};
 
 	for (int i = 0; i < grid->spritebatch().size(); i++) {
 		int f = 0;
@@ -79,10 +60,108 @@
 Map::~Map() {
 	removeChild(grid);
 	delete grid;
+	delete[] level;
 }
+
+int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, int facing) {
+
+	float mostOverlapped = -9999;
+	int tileCounter = 0;
+	float totalOverlapped = 0;
+
+	float totalOverlappedX = 0;
+	float totalOverlappedY = 0;
+
+	size.x -= 40;
+
+	// Staart & hoofd rekenen niet mee, 1 tile is niet genoeg overlapping als het alleen gevult zou zijn met je staart
+	if (facing == 0) { position.x += 10; size.x -= 40; }
+	if (facing == 1) { position.x -= 10; size.x -= 40; }
+	
+	//Loop through tiles
+	for (int x = 0; x < gridwidth; x++) {
+		for (int y = 0; y < gridheight; y++) {
+
+			//Check if camouflage is correct
+			float dist = CalculateDistance(grid->spritebatch()[tileCounter]->spriteposition, position);
+
+			if (grid->spritebatch()[tileCounter]->frame() == camouflage && dist < 130) {
+
+				//Get overlap
+				float overlapped = -9999;
+				float overlappedX = -9999;
+				float overlappedY = -9999;
+				//Together
+				float togetherX = cellwidth + size.x;
+				float togetherY = cellheight + size.y;
+				//Total
+				float farestRight = 0;
+				float farestLeft = 0;
+				float farestTop = 0;
+				float farestBottom = 0;
+
+				float playerRight = position.x + size.x / 2;
+				float tileRight = grid->spritebatch()[tileCounter]->spriteposition.x + cellwidth / 2;
+				float playerLeft = position.x - size.x / 2;
+				float tileLeft = grid->spritebatch()[tileCounter]->spriteposition.x - cellwidth / 2;
+				float playerTop = position.y - size.y / 2;
+				float tileTop = grid->spritebatch()[tileCounter]->spriteposition.y - cellheight / 2;
+				float playerBottom = position.y + size.y / 2;
+				float tileBottom = grid->spritebatch()[tileCounter]->spriteposition.y + cellheight / 2;
+
+				if (playerTop < tileTop) { farestTop = playerTop; }
+				if (playerTop > tileTop) { farestTop = tileTop; }
+				if (playerBottom > tileBottom) { farestBottom = playerBottom; }
+				if (playerBottom < tileBottom) { farestBottom = tileBottom; }
+
+				if (playerRight > tileRight) { farestRight = playerRight; } // player is right
+				if (playerRight < tileRight) { farestRight = tileRight; } // tile is right
+				if (playerLeft < tileLeft) { farestLeft = playerLeft; } // player is left
+				if (playerLeft > tileLeft) { farestLeft = tileLeft; } // tile is left
+
+				float totalX = farestRight - farestLeft;
+				float totalY = farestBottom - farestTop;
+
+				overlappedX = togetherX - totalX;
+				overlappedY = togetherY - totalY;
+				 
+				overlapped = round((overlappedX * overlappedY) / 100);
+				if (overlappedX < 0 && overlappedY < 0) { overlapped *= -1; }
+
+				if (overlapped > 0) {
+					totalOverlapped += overlapped;
+					totalOverlappedX += overlappedX;
+					totalOverlappedY += overlappedY;
+					std::cout << "TILE [" << tileCounter << "]\n";
+					std::cout << " - overlapped = " << overlapped << "\n";
+					std::cout << " - overlappedX = "<< overlappedX << " (togetherX["<<togetherX<<"] - totalX["<<totalX<<"])\n";
+					std::cout << " - overlappedY = " << overlappedY << "\n\n";
+				}
+
+				if (overlapped > mostOverlapped) { mostOverlapped = overlapped; }
+			}
+
+			tileCounter++;
+		}
+	}
+
+	std::cout << "TOTAL\n";
+	std::cout << " - totalOverlappedX = " << round(totalOverlappedX) << "\n";
+	std::cout << " - totalOverlappedY = " << round(totalOverlappedY) << "\n";
+	std::cout << " - totalOverlapped = " << totalOverlapped << "\n\n";
+	std::cout << "#########################################\n\n";
+
+	return totalOverlapped;
+}
+
+float Map::CalculateDistance(Vector2 p1, Vector2 p2)
+{
+	float diffY = p1.y - p2.y;
+	float diffX = p1.x - p2.x;
+	return sqrt((diffY * diffY) + (diffX * diffX));
+}
+
 
 void Map::update(float deltaTime) {
 
 }
-
-
