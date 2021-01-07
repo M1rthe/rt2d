@@ -47,11 +47,13 @@ Level1::~Level1()
 
 void Level1::update(float deltaTime) {
 
-	int overlapping = map->findMostOverlappedTile(Vector2(player->position.x, player->position.y + 10), Vector2(player->scale.x * player->sprite()->size.x, player->scale.y * player->sprite()->size.y - 20), player->camouflageFrame, player->facing);
-	if (overlapping > 34) { 
+	int overlapping = map->findMostOverlappedTile(Vector2(player->position.x, player->position.y), Vector2(player->scale.x * player->sprite()->size.x, player->scale.y * player->sprite()->size.y - 20), player->camouflageFrame, player->facing);
+	if (overlapping > 18) { 
 		hud->camouflagegauge->overlappingSpace->message("HIDDEN");
-	} else { 
+		//hud->camouflagegauge->overlappingSpace->message("HIDDEN("+ to_string(overlapping) +")");
+	} if (overlapping <= 18) {
 		hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN");
+		//hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN(" + to_string(overlapping) + ")");
 	}
 
 	//dhud->camouflagegauge->overlappingSpace->message(to_string(overlapping));

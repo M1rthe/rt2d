@@ -75,8 +75,10 @@ int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, 
 	size.x -= 40;
 
 	// Staart & hoofd rekenen niet mee, 1 tile is niet genoeg overlapping als het alleen gevult zou zijn met je staart
-	if (facing == 0) { position.x += 10; size.x -= 40; }
-	if (facing == 1) { position.x -= 10; size.x -= 40; }
+	if (facing == 0) { position.x -= 0; size.x -= 20; }
+	if (facing == 1) { position.x += 0; size.x -= 20; }
+	position.y += 10;
+	size.y -= 20;
 	
 	//Loop through tiles
 	for (int x = 0; x < gridwidth; x++) {
@@ -130,26 +132,12 @@ int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, 
 
 				if (overlapped > 0) {
 					totalOverlapped += overlapped;
-					totalOverlappedX += overlappedX;
-					totalOverlappedY += overlappedY;
-					std::cout << "TILE [" << tileCounter << "]\n";
-					std::cout << " - overlapped = " << overlapped << "\n";
-					std::cout << " - overlappedX = "<< overlappedX << " (togetherX["<<togetherX<<"] - totalX["<<totalX<<"])\n";
-					std::cout << " - overlappedY = " << overlappedY << "\n\n";
 				}
-
-				if (overlapped > mostOverlapped) { mostOverlapped = overlapped; }
 			}
 
 			tileCounter++;
 		}
 	}
-
-	std::cout << "TOTAL\n";
-	std::cout << " - totalOverlappedX = " << round(totalOverlappedX) << "\n";
-	std::cout << " - totalOverlappedY = " << round(totalOverlappedY) << "\n";
-	std::cout << " - totalOverlapped = " << totalOverlapped << "\n\n";
-	std::cout << "#########################################\n\n";
 
 	return totalOverlapped;
 }
