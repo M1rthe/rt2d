@@ -7,7 +7,9 @@
 #include "enemy.h"
 
 Enemy::Enemy() : Entity() {
-
+	this->addSprite("assets/Enemies/Human1.tga");
+	this->sprite()->filter(0);
+	this->scale = Point2(3, 3);
 }
 
 Enemy::~Enemy() {

@@ -39,8 +39,163 @@ Player::~Player() {
 }
 
 void Player::update(float deltaTime) {
-	//movement(deltaTime, "key"); //click or key
 	animation();
+}
+
+void Player::move(Vector2 direction, float speed, float deltaTime, vector<Rectangle> tileRects) {
+	//x
+	oldPosition = position;
+	position.x += direction.x * speed * deltaTime;
+	collided = false;
+	for (int i = 0; i < tileRects.size(); i++) {
+		bool collidedBoolX = Collider::rectangle2rectangle(getRect(), tileRects[i]);
+		if (collidedBoolX) { collided = collidedBoolX; }
+	}
+	if (collided) { position = oldPosition; }
+
+	//y
+	oldPosition = position;
+	position.y += direction.y * speed * deltaTime;
+	collided = false;
+	for (int i = 0; i < tileRects.size(); i++) {
+		bool collidedBoolY = Collider::rectangle2rectangle(getRect(), tileRects[i]);
+		if (collidedBoolY) { collided = collidedBoolY; }
+	}
+	if (collided) { position = oldPosition; }
+}
+
+void Player::clickCamouflage(int c) {
+	if (c == 1) { addSpriteSheet("assets/kameleon/kameleonAnimatedGrass.tga", 2, 4); camouflageFrame = 0; }
+	if (c == 2) { addSpriteSheet("assets/kameleon/kameleonAnimatedBricks.tga", 2, 4); camouflageFrame = 2; }
+	if (c == 3) { addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4); camouflageFrame = 65; }
+
+	sprite()->filter(0);
+	if (facing == RIGHT) { sprite()->frame(6); }
+	if (facing == LEFT) { sprite()->frame(7); }
+}
+
+void Player::consume() {
+	tongueIsStickedOut = true;
+	timeFirstStickedOutTongue = time.seconds();
+}
+
+void Player::newDestination(Vector2 d) {
+	finalDestination = d;
+	velocity *= 0;
+}
+
+Rectangle Player::getRect() { 
+	return Rectangle(position.x, position.y + 12, scale.x * sprite()->size.x, scale.y * sprite()->size.y - 23); 
+}
+
+void Player::check4input(float dt, Map* map, bool moveWithKeys) {
+
+	//Consume
+	if (input()->getKeyUp(KeyCode::C)) {
+		consume();
+	}
+	//WASD
+	if (moveWithKeys) {
+
+		Vector2 dir = Vector2();
+		isMoving = false;
+
+		if (input()->getKey(KeyCode::W) || input()->getKey(KeyCode::Up)) {
+
+			if (position.y + (scale.y * sprite()->height() / 2) - 10 >= map->position.y + SHEIGHT / 2) {
+				dir.y -= 1;
+				isMoving = true;
+			}
+		}
+		if (input()->getKey(KeyCode::S) || input()->getKey(KeyCode::Down)) {
+			if (position.y + (scale.y * sprite()->height() / 2) - 10 <= map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight)) {
+				dir.y += 1;
+				isMoving = true;
+			}
+		}
+		if (input()->getKey(KeyCode::D) || input()->getKey(KeyCode::Right)) {
+			if (position.x + (scale.x * sprite()->width() / 2) - 45 <= map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth)) {
+				dir.x += 1;
+				facing = RIGHT;
+				isMoving = true;
+			}
+		}
+		if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::Left)) {
+			if (position.x + (scale.x * sprite()->width() / 2) - 50 >= map->position.x + SWIDTH / 2) { 
+				dir.x -= 1;
+				facing = LEFT;
+				isMoving = true;
+			}
+		}
+
+		speed = 250.0;
+		dir.normalize();
+		move(dir, speed, dt, map->tilesWithCollider);
+	}
+	//Click to go
+	if (!moveWithKeys) {
+
+		//Borders
+		if (position.y + (scale.y * sprite()->height() / 2) - 10 < map->position.y + SHEIGHT / 2) { //top
+			finalDestination.y = map->position.y + SHEIGHT / 2 - (scale.y * sprite()->height() / 2) + 10;
+			position.y = map->position.y + SHEIGHT / 2 - (scale.y * sprite()->height() / 2) + 10;
+		}
+		if (position.y + (scale.y * sprite()->height() / 2) - 10 > map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight)) { //bottom
+			finalDestination.y = map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight) - (scale.y * sprite()->height() / 2) + 10;
+			position.y = map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight) - (scale.y * sprite()->height() / 2) + 10;
+		}
+		if (position.x + (scale.x * sprite()->width() / 2) - 45 > map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth)) { //right
+			finalDestination.x = map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth) - (scale.x * sprite()->width() / 2) + 45;
+			position.x = map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth) - (scale.x * sprite()->width() / 2) + 45;
+		}
+		if (position.x + (scale.x * sprite()->width() / 2) - 50 < map->position.x + SWIDTH / 2) { //left
+			finalDestination.x = map->position.x + SWIDTH / 2 - (scale.x * sprite()->width() / 2) + 50;
+			position.x = map->position.x + SWIDTH / 2 - (scale.x * sprite()->width() / 2) + 50;
+		}
+
+		//get direction
+		direction = (finalDestination - Vector2(position.x, position.y));
+		//get distance
+		distance = sqrt(direction.x * direction.x + direction.y * direction.y);
+		//normalize dir
+		acceleration = Vector2(direction.x / distance, direction.y / distance);
+
+		if (distance <= 1.5) { //Standing still
+			acceleration *= 0;
+			velocity *= 0;
+			position = finalDestination;
+
+			//Animation
+			isMoving = false;
+		}
+
+		if (distance > 1.5 && distance <= 8.0) { //Slowing down
+			acceleration *= 0.999;
+			velocity *= 0.999;
+
+			//Animation
+			isMoving = false;
+		}
+
+		if (distance > 8.0) { //Moving
+
+			//Velocity & acceleration
+			velocity += acceleration;
+			if (velocity.x > topspeed || velocity.x < -topspeed || velocity.y > topspeed || velocity.y < -topspeed) {
+				velocity -= acceleration;
+			}
+
+			//Move
+			move(velocity, speed, dt, map->tilesWithCollider);
+
+			//Animation
+			isMoving = true;
+			if (velocity.x > 0) {
+				facing = RIGHT;
+			}
+			else { facing = LEFT; }
+		}
+	}
 }
 
 void Player::animation() {
@@ -96,142 +251,4 @@ void Player::animation() {
 		}
 		else { this->sprite()->frame(7); }
 	}
-}
-
-void Player::moveByKey(float dt, Vector2 dir) {
-	speed = 250.0;
-	dir.normalize();
-	position += dir * speed * dt;
-}
-
-void Player::moveByClick(float dt) {
-
-	//get direction
-	direction = (finalDestination - Vector2(position.x, position.y));
-	//get distance
-	distance = sqrt(direction.x * direction.x + direction.y * direction.y);
-	//normalize dir
-	acceleration = Vector2(direction.x / distance, direction.y / distance);
-
-
-	if (distance <= 1.5) { //Standing still
-		acceleration *= 0;
-		velocity *= 0;
-		position = finalDestination;
-
-		//Animation
-		isMoving = false;
-	}
-
-	if (distance > 1.5 && distance <= 8.0) { //Slowing down
-		acceleration *= 0.999;
-		velocity *= 0.999;
-
-		//Animation
-		isMoving = false;
-	}
-
-	if (distance > 8.0) { //Moving
-
-		//Velocity & acceleration
-		velocity += acceleration;
-		if (velocity.x > topspeed || velocity.x < -topspeed || velocity.y > topspeed || velocity.y < -topspeed) {
-			velocity -= acceleration;
-		}
-
-		//Move
-		position += velocity * speed * dt;
-
-		//Animation
-		isMoving = true;
-		if (velocity.x > 0) {
-			facing = RIGHT;
-		}
-		else { facing = LEFT; }
-	}
-}
-
-void Player::check4input(float dt, Map* map, bool moveWithKeys) {
-	//Consume
-	if (input()->getKeyUp(KeyCode::C)) {
-		consume();
-	}
-	//WASD
-	if (moveWithKeys) {
-
-		Vector2 dir = Vector2();
-		isMoving = false;
-
-		//Movement WASD
-		if (input()->getKey(KeyCode::W) || input()->getKey(KeyCode::Up)) {
-
-			if (position.y + (scale.y * sprite()->height() / 2) - 10 >= map->position.y + SHEIGHT / 2) {//+ (player->scale.y * player->sprite()->height())       //+ ((map->cellheight * map->gridheight) / 2)
-				dir.y -= 1;
-				isMoving = true;
-			}
-		}
-		if (input()->getKey(KeyCode::S) || input()->getKey(KeyCode::Down)) {
-			if (position.y + (scale.y * sprite()->height() / 2) - 10 <= map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight)) {
-				dir.y += 1;
-				isMoving = true;
-			}
-		}
-		if (input()->getKey(KeyCode::D) || input()->getKey(KeyCode::Right)) {
-			if (position.x + (scale.x * sprite()->width() / 2) - 45 <= map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth)) {
-				dir.x += 1;
-				facing = RIGHT;
-				isMoving = true;
-			}
-		}
-		if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::Left)) {
-			if (position.x + (scale.x * sprite()->width() / 2) - 50 >= map->position.x + SWIDTH / 2) { // (map->cellwidth * map->gridwidth)
-				dir.x -= 1;
-				facing = LEFT;
-				isMoving = true;
-			}
-		}
-		moveByKey(dt, dir);
-	}
-	else {
-		//Limit click to go movement
-		if (position.y + (scale.y * sprite()->height() / 2) - 10 < map->position.y + SHEIGHT / 2) { //top
-			finalDestination.y = map->position.y + SHEIGHT / 2 - (scale.y * sprite()->height() / 2) + 10;
-			position.y = map->position.y + SHEIGHT / 2 - (scale.y * sprite()->height() / 2) + 10;
-		}
-		if (position.y + (scale.y * sprite()->height() / 2) - 10 > map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight)) { //bottom
-			finalDestination.y = map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight) - (scale.y * sprite()->height() / 2) + 10;
-			position.y = map->position.y - SHEIGHT / 2 + (map->cellheight * map->gridheight) - (scale.y * sprite()->height() / 2) + 10;
-		}
-		if (position.x + (scale.x * sprite()->width() / 2) - 45 > map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth)) { //right
-			finalDestination.x = map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth) - (scale.x * sprite()->width() / 2) + 45;
-			position.x = map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth) - (scale.x * sprite()->width() / 2) + 45;
-		}
-		if (position.x + (scale.x * sprite()->width() / 2) - 50 < map->position.x + SWIDTH / 2) { //left
-			finalDestination.x = map->position.x + SWIDTH / 2 - (scale.x * sprite()->width() / 2) + 50;
-			position.x = map->position.x + SWIDTH / 2 - (scale.x * sprite()->width() / 2) + 50;
-		}
-		moveByClick(dt);
-	}
-}
-
-void Player::clickCamouflage(int c) {
-	if (c == 1) { addSpriteSheet("assets/kameleon/kameleonAnimatedGrass.tga", 2, 4); camouflageFrame = 0; }
-	if (c == 2) { addSpriteSheet("assets/kameleon/kameleonAnimatedBricks.tga", 2, 4); camouflageFrame = 2; }
-	if (c == 3) { addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4); camouflageFrame = 65; }
-
-	sprite()->filter(0);
-	if (facing == RIGHT) { sprite()->frame(6); }
-	if (facing == LEFT) { sprite()->frame(7); }
-}
-
-
-void Player::consume() {
-	tongueIsStickedOut = true;
-	timeFirstStickedOutTongue = time.seconds();
-}
-
-
-void Player::newDestination(Vector2 d) {
-	finalDestination = d;
-	velocity *= 0;
 }

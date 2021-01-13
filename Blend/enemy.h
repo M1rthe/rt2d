@@ -26,6 +26,8 @@ public:
 	/// @return void
 	virtual void update(float deltaTime);
 
+	bool playerIsHidden;
+
 private:
 
 };

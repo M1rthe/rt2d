@@ -9,7 +9,7 @@
 Map::Map() : Entity() {
 
 	gridwidth = 64;
-	gridheight = 16;
+	gridheight = 32;
 	cellwidth = 64;
 	cellheight = 64;
 
@@ -17,9 +17,6 @@ Map::Map() : Entity() {
 	grid->addGrid("assets/mytileset.tga", 8, 8, gridwidth, gridheight, cellwidth, cellheight);
 
 	int tileCounter = 0;
-
-	int w = 32;
-	int h = 16;
 
 	//Loop through tiles
 	for (int x = 0; x < gridwidth; x++) {
@@ -34,26 +31,44 @@ Map::Map() : Entity() {
 
 	addChild(grid);
 
-	for (int i = 0; i < grid->spritebatch().size(); i++) {
-		int f = 0;
-		if (level[i] == "d") { f = 1; }
-		if (level[i] == "b") { f = 2; }
-		if (level[i] == "w") { f = 3; }
-		if (level[i].at(0) == 'c') {
+	for (int i = 0; i < grid->spritebatch().size(); i++) { 
+		// at(0) = tileframe
+		// at(1) = collision (t or f)
+		// at(2) = color
+
+		int f = 0; //Grass
+		//Tileframe
+		if (level[i].at(0) == 'd') { f = 1; } //Dirt
+		if (level[i].at(0) == 'b') { f = 2; } //Bricks
+		if (level[i].at(0) == 'w') { f = 3; } //Water
+		if (level[i].at(0) == 'c') { //Color
 			f = 4;
 			grid->spritebatch()[i]->color = WHITE;
 
-			if (level[i].length() > 1) {
-				if (level[i].at(1) == 'r') { grid->spritebatch()[i]->color = RED; }
-				if (level[i].at(1) == 'o') { grid->spritebatch()[i]->color = ORANGE; }
-				if (level[i].at(1) == 'y') { grid->spritebatch()[i]->color = YELLOW; }
-				if (level[i].at(1) == 'g') { grid->spritebatch()[i]->color = GREEN; }
-				if (level[i].at(1) == 'b') { grid->spritebatch()[i]->color = BLUE; }
-				if (level[i].at(1) == 'm') { grid->spritebatch()[i]->color = MAGENTA; }
+			if (level[i].length() > 2) {
+				//Color
+				if (level[i].at(2) == 'r') { grid->spritebatch()[i]->color = RED; }
+				if (level[i].at(2) == 'o') { grid->spritebatch()[i]->color = ORANGE; }
+				if (level[i].at(2) == 'y') { grid->spritebatch()[i]->color = YELLOW; }
+				if (level[i].at(2) == 'g') { grid->spritebatch()[i]->color = GREEN; }
+				if (level[i].at(2) == 'b') { grid->spritebatch()[i]->color = BLUE; }
+				if (level[i].at(2) == 'm') { grid->spritebatch()[i]->color = MAGENTA; }
 			}
 		}
+		//Collision
+		if (level[i].length() > 1) {
+			if (level[i].at(1) == 't') {
+				tilesWithCollision.push_back(i); 
+				//tilesWithCollider.push_back(getRectTile(tilesWithCollision[i]));
+			}
+		}
+
 		grid->spritebatch()[i]->filter(0);
 		grid->spritebatch()[i]->frame(f);
+	}
+
+	for (int j = 0; j < tilesWithCollision.size(); j++)	{
+		tilesWithCollider.push_back(getRectTile(j)); // NO getRectTile(tilesWithCollision[j]), tilesWithCollision happens in function itself
 	}
 }
 
@@ -61,6 +76,7 @@ Map::~Map() {
 	removeChild(grid);
 	delete grid;
 	delete[] level;
+	tilesWithCollision.clear();
 }
 
 int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, int facing) {
@@ -78,7 +94,7 @@ int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, 
 	if (facing == 0) { position.x -= 0; size.x -= 20; }
 	if (facing == 1) { position.x += 0; size.x -= 20; }
 	position.y += 10;
-	size.y -= 20;
+	size.y -= 40;
 	
 	//Loop through tiles
 	for (int x = 0; x < gridwidth; x++) {
@@ -149,6 +165,15 @@ float Map::CalculateDistance(Vector2 p1, Vector2 p2)
 	return sqrt((diffY * diffY) + (diffX * diffX));
 }
 
+Rectangle Map::getRectTile(int tile) {
+
+	float x = grid->spritebatch()[tilesWithCollision[tile]]->spriteposition.x + cellwidth;
+	float y = grid->spritebatch()[tilesWithCollision[tile]]->spriteposition.y - 5;
+	float w = cellwidth/2;
+	float h = cellheight/2;
+
+	return Rectangle(x, y, w, h);
+}
 
 void Map::update(float deltaTime) {
 

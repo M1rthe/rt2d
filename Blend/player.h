@@ -40,6 +40,7 @@ public:
 	void check4input(float dt, Map* map, bool moveWithKeys);
 	void clickCamouflage(int c);
 	void newDestination(Vector2 d);
+	Rectangle getRect();
 
 	int camouflageFrame = 65; //doesnt exists, so its just green, default cameleon
 	Vector2 finalDestination;
@@ -50,7 +51,10 @@ private:
 	void animation();
 	void consume();
 	void moveByClick(float dt);
-	void moveByKey(float dt, Vector2 dir);
+	void move(Vector2 direction, float speed, float deltaTime, vector<Rectangle> tileRects);
+
+	Vector2 oldPosition;
+	bool collided;
 
 	Timer time;
 	double nextActionTime = 0.0;

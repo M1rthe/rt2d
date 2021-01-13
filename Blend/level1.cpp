@@ -20,7 +20,12 @@ Level1::Level1() : Scene()
 	player->position = Vector2(SWIDTH / 2, SHEIGHT / 2);
 	player->finalDestination = player->position;
 
+	human = new Enemy();
+	human->position = Vector2(900, 360);
+
 	hud = new Hud();
+
+	hud->mission->message("mission");
 
 	moveByKey = true;
 
@@ -29,6 +34,7 @@ Level1::Level1() : Scene()
 	this->addChild(map);
 	this->addChild(player);
 	this->addChild(hud);
+	this->addChild(human);
 }
 
 
@@ -38,21 +44,25 @@ Level1::~Level1()
 	this->removeChild(map);
 	this->removeChild(player);
 	this->removeChild(hud);
+	this->removeChild(human);
 
 	// delete myentity from the heap (there was a 'new' in the constructor)
 	delete map;
 	delete player;
 	delete hud;
+	delete human;
 }
 
 void Level1::update(float deltaTime) {
 
-	int overlapping = map->findMostOverlappedTile(Vector2(player->position.x, player->position.y), Vector2(player->scale.x * player->sprite()->size.x, player->scale.y * player->sprite()->size.y - 20), player->camouflageFrame, player->facing);
+	int overlapping = map->findMostOverlappedTile(Vector2(player->position.x, player->position.y), Vector2(player->scale.x * player->sprite()->size.x, player->scale.y * player->sprite()->size.y), player->camouflageFrame, player->facing);
 	if (overlapping > 18) { 
 		hud->camouflagegauge->overlappingSpace->message("HIDDEN");
+		human->playerIsHidden = false;
 		//hud->camouflagegauge->overlappingSpace->message("HIDDEN("+ to_string(overlapping) +")");
 	} if (overlapping <= 18) {
 		hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN");
+		human->playerIsHidden = true;
 		//hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN(" + to_string(overlapping) + ")");
 	}
 
@@ -99,12 +109,47 @@ void Level1::update(float deltaTime) {
 		}
 	}
 
+
 	// ###############################################################
 	// Camera
 	// ###############################################################
 
 	this->camera()->position = player->position;
 	this->camera()->position.z = 650;
+
+
+	// ###############################################################
+	// Collision
+	// ###############################################################
+	/*
+	player->limitLeft = false;
+	player->limitUp = false;
+	player->limitDown = false;
+	player->limitRight = false;
+
+	for (int i = 0; i < map->tilesWithCollider.size(); i++) {
+		//player->collideWithTile(map->getRectTile(i));
+		if (Collider::rectangle2rectangle(map->getRectTile(i), player->getRect())) {
+			std::cout << "Tile[" << i << "]: ";
+			if (player->getRect().y + player->getRect().height - 11 < map->getRectTile(i).y) {
+				std::cout << "Above. ";
+				player->limitDown = true;
+			}
+			if (player->getRect().y + 11 > map->getRectTile(i).y + map->getRectTile(i).height) {
+				std::cout << "Below. ";
+				player->limitUp = true;
+			}
+			if (player->getRect().x + player->getRect().width - 11 < map->getRectTile(i).x) {
+				std::cout << "Left. ";
+				player->limitRight = true;
+			}
+			if (player->getRect().x + 11 > map->getRectTile(i).x + map->getRectTile(i).width) {
+				std::cout << "Right. ";
+				player->limitLeft = true;
+			}
+		}
+		
+	}*/
 }
 
 bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {

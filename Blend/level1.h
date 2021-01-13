@@ -12,6 +12,7 @@
 #include <rt2d/scene.h>
 #include <rt2d/camera.h>
 #include "player.h"
+#include "enemy.h"
 #include "map.h"
 #include "hud.h"
 
@@ -36,6 +37,7 @@ private:
 	/// @brief the rotating square in the middle of the screen
 	Map* map;
 	Player* player;
+	Enemy* human;
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
 	int currentCamouflage = 3;

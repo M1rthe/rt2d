@@ -14,7 +14,7 @@ OPTION(MAKE_NOISE "Make Perlin Noise application" OFF)
 OPTION(MAKE_GEOMETRIC "Make GeoMetric application" OFF)
 OPTION(MAKE_SHADY "Make custom Shader application" ON)
 OPTION(MAKE_WOLFENSTEIN "Make Wolfenstein3D raycasting application" OFF)
-OPTION(MAKE_COLLISION "Make Collision application" OFF)
+OPTION(MAKE_COLLISION "Make Collision application" ON)
 OPTION(MAKE_DEBUGDRAW "Make DebugDraw application" OFF)
 OPTION(MAKE_RAYCAST "Make Raycast application" OFF)
 OPTION(MAKE_MATRIXPIXEL "Make MatrixPixel application" OFF)
@@ -192,6 +192,7 @@ IF(MAKE_BLEND)
 		Blend/map.h
 		Blend/player.cpp
 		Blend/player.h
+		Blend/collider.h
 	)
 	target_link_libraries(Blend
 		${ALL_GRAPHICS_LIBS}

@@ -14,8 +14,6 @@ Hud::Hud() : Entity() {
 	camouflage3 = new Camouflage(3);
 	camouflagegauge = new Camouflagegauge();
 
-	mission->message("text");
-
 	addChild(mission);
 	addChild(camouflage1);
 	addChild(camouflage2);
