@@ -32,36 +32,57 @@ Map::Map() : Entity() {
 	addChild(grid);
 
 	for (int i = 0; i < grid->spritebatch().size(); i++) { 
-		// at(0) = tileframe
-		// at(1) = collision (t or f)
-		// at(2) = color
+
+		//Collision (t or f)
+		if (level[i].length() > 0) {
+			if (level[i].at(0) == 't') {
+				tilesWithCollision.push_back(i);
+			}
+		}
 
 		int f = 0; //Grass
-		//Tileframe
-		if (level[i].at(0) == 'd') { f = 1; } //Dirt
-		if (level[i].at(0) == 'b') { f = 2; } //Bricks
-		if (level[i].at(0) == 'w') { f = 3; } //Water
-		if (level[i].at(0) == 'c') { //Color
-			f = 4;
-			grid->spritebatch()[i]->color = WHITE;
 
-			if (level[i].length() > 2) {
-				//Color
-				if (level[i].at(2) == 'r') { grid->spritebatch()[i]->color = RED; }
-				if (level[i].at(2) == 'o') { grid->spritebatch()[i]->color = ORANGE; }
-				if (level[i].at(2) == 'y') { grid->spritebatch()[i]->color = YELLOW; }
-				if (level[i].at(2) == 'g') { grid->spritebatch()[i]->color = GREEN; }
-				if (level[i].at(2) == 'b') { grid->spritebatch()[i]->color = BLUE; }
-				if (level[i].at(2) == 'm') { grid->spritebatch()[i]->color = MAGENTA; }
-			}
-		}
-		//Collision
 		if (level[i].length() > 1) {
-			if (level[i].at(1) == 't') {
-				tilesWithCollision.push_back(i); 
-				//tilesWithCollider.push_back(getRectTile(tilesWithCollision[i]));
+			if (level[i].at(1) == 'd') {
+				if (level[i].at(2) == 'i') { f = 1; } //DIrt
+				if (level[i].at(2) == 't') { f = 11; } //DoorTop
+				if (level[i].at(2) == 'b') { f = 12; } //DoorBottom
+			}
+			if (level[i].at(1) == 'b') {
+				if (level[i].at(2) == 'r') { f = 2; } //BRicks
+				if (level[i].at(2) == 't') { f = 8; } //BarsTop
+				if (level[i].at(2) == 'b') { f = 9; } //BarsBottom
+			}
+			if (level[i].at(1) == 'w') {
+				if (level[i].at(2) == 'a') { f = 3; } //WAter
+			}
+			if (level[i].at(1) == 's') {
+				if (level[i].at(2) == 'b') { f = 5; } //StoneBricks
+				if (level[i].at(2) == 't') { f = 7; } //STone
+			}
+			if (level[i].at(1) == 'p') {
+				if (level[i].at(2) == 'l') { f = 10; } //PLanks
+			}
+			if (level[i].at(1) == 'l') {
+				if (level[i].at(2) == 'u') { f = 6; } //LUchtrooster
+			}
+			if (level[i].at(1) == 'c') { //Color
+				f = 4;
+				grid->spritebatch()[i]->color = WHITE;
+
+				if (level[i].length() > 2) {
+					//Color
+					if (level[i].at(2) == 'r') { grid->spritebatch()[i]->color = RED; }
+					if (level[i].at(2) == 'o') { grid->spritebatch()[i]->color = ORANGE; }
+					if (level[i].at(2) == 'y') { grid->spritebatch()[i]->color = YELLOW; }
+					if (level[i].at(2) == 'g') { grid->spritebatch()[i]->color = GRAY; }
+					if (level[i].at(2) == 'b') { grid->spritebatch()[i]->color = BLUE; }
+					if (level[i].at(2) == 'm') { grid->spritebatch()[i]->color = MAGENTA; }
+				}
 			}
 		}
+
+		if (level[i].at(level[i].length() - 1) == 'F') { grid->spritebatch()[i]->spritescale.x *= -1; std::cout << "sprite with frame " << f << "is supposed to be flipped\n"; }
 
 		grid->spritebatch()[i]->filter(0);
 		grid->spritebatch()[i]->frame(f);
@@ -79,7 +100,7 @@ Map::~Map() {
 	tilesWithCollision.clear();
 }
 
-int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, int facing) {
+int Map::findMostOverlappedTile(Vector2 pos, Vector2 size, int camouflage, int facing) {
 
 	float mostOverlapped = -9999;
 	int tileCounter = 0;
@@ -91,9 +112,9 @@ int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, 
 	size.x -= 40;
 
 	// Staart & hoofd rekenen niet mee, 1 tile is niet genoeg overlapping als het alleen gevult zou zijn met je staart
-	if (facing == 0) { position.x -= 0; size.x -= 20; }
-	if (facing == 1) { position.x += 0; size.x -= 20; }
-	position.y += 10;
+	if (facing == 0) { pos.x += 5; size.x -= 10; }
+	if (facing == 1) { pos.x -= 5; size.x -= 10; }
+	pos.y += 10;
 	size.y -= 40;
 	
 	//Loop through tiles
@@ -101,7 +122,7 @@ int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, 
 		for (int y = 0; y < gridheight; y++) {
 
 			//Check if camouflage is correct
-			float dist = CalculateDistance(grid->spritebatch()[tileCounter]->spriteposition, position);
+			float dist = CalculateDistance(grid->spritebatch()[tileCounter]->spriteposition, pos);
 
 			if (grid->spritebatch()[tileCounter]->frame() == camouflage && dist < 130) {
 
@@ -118,13 +139,13 @@ int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, 
 				float farestTop = 0;
 				float farestBottom = 0;
 
-				float playerRight = position.x + size.x / 2;
+				float playerRight = pos.x + size.x / 2;
 				float tileRight = grid->spritebatch()[tileCounter]->spriteposition.x + cellwidth / 2;
-				float playerLeft = position.x - size.x / 2;
+				float playerLeft = pos.x - size.x / 2;
 				float tileLeft = grid->spritebatch()[tileCounter]->spriteposition.x - cellwidth / 2;
-				float playerTop = position.y - size.y / 2;
+				float playerTop = pos.y - size.y / 2;
 				float tileTop = grid->spritebatch()[tileCounter]->spriteposition.y - cellheight / 2;
-				float playerBottom = position.y + size.y / 2;
+				float playerBottom = pos.y + size.y / 2;
 				float tileBottom = grid->spritebatch()[tileCounter]->spriteposition.y + cellheight / 2;
 
 				if (playerTop < tileTop) { farestTop = playerTop; }
@@ -143,7 +164,7 @@ int Map::findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, 
 				overlappedX = togetherX - totalX;
 				overlappedY = togetherY - totalY;
 				 
-				overlapped = round((overlappedX * overlappedY) / 100);
+				overlapped = round((overlappedX * overlappedY) / 10);
 				if (overlappedX < 0 && overlappedY < 0) { overlapped *= -1; }
 
 				if (overlapped > 0) {

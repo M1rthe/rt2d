@@ -17,11 +17,11 @@ Level1::Level1() : Scene()
 	map = new Map();
 
 	player = new Player();
-	player->position = Vector2(SWIDTH / 2, SHEIGHT / 2);
+	player->position = Vector2(680, 1500);
 	player->finalDestination = player->position;
 
 	human = new Enemy();
-	human->position = Vector2(900, 360);
+	human->position = Vector2(1800, 1300);
 
 	hud = new Hud();
 
@@ -33,8 +33,8 @@ Level1::Level1() : Scene()
 	// add myentity to this Scene as a child.
 	this->addChild(map);
 	this->addChild(player);
-	this->addChild(hud);
 	this->addChild(human);
+	this->addChild(hud);
 }
 
 
@@ -56,11 +56,12 @@ Level1::~Level1()
 void Level1::update(float deltaTime) {
 
 	int overlapping = map->findMostOverlappedTile(Vector2(player->position.x, player->position.y), Vector2(player->scale.x * player->sprite()->size.x, player->scale.y * player->sprite()->size.y), player->camouflageFrame, player->facing);
-	if (overlapping > 18) { 
+	std::cout << "overlapping: "<< overlapping<<", supposed to be > 45\n";
+	if (overlapping > 45) { 
 		hud->camouflagegauge->overlappingSpace->message("HIDDEN");
 		human->playerIsHidden = false;
 		//hud->camouflagegauge->overlappingSpace->message("HIDDEN("+ to_string(overlapping) +")");
-	} if (overlapping <= 18) {
+	} if (overlapping <= 45) {
 		hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN");
 		human->playerIsHidden = true;
 		//hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN(" + to_string(overlapping) + ")");
@@ -116,7 +117,6 @@ void Level1::update(float deltaTime) {
 
 	this->camera()->position = player->position;
 	this->camera()->position.z = 650;
-
 
 	// ###############################################################
 	// Collision

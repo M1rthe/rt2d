@@ -20,7 +20,7 @@ Player::Player() : Entity() {
 
 	this->addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4);
 	this->sprite()->filter(0);
-	this->scale = Point2(5, 5);
+	this->scale = Point2(3.5, 3.5);
 	this->sprite()->frame(6);
 
 	/*
@@ -85,7 +85,7 @@ void Player::newDestination(Vector2 d) {
 }
 
 Rectangle Player::getRect() { 
-	return Rectangle(position.x, position.y + 12, scale.x * sprite()->size.x, scale.y * sprite()->size.y - 23); 
+	return Rectangle(position.x + 24, position.y + 12, scale.x * sprite()->size.x, scale.y * sprite()->size.y - 12);
 }
 
 void Player::check4input(float dt, Map* map, bool moveWithKeys) {
