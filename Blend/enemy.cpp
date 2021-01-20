@@ -22,7 +22,9 @@ void Enemy::update(float deltaTime) {
 
 }
 
-void Enemy::ai(float deltaTime, Vector2 playerPosition) {
+Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition) {
+
+	isAttacking = false;
 
 	float speed = 80;
 	float distance;
@@ -40,15 +42,18 @@ void Enemy::ai(float deltaTime, Vector2 playerPosition) {
 		position += direction * speed * deltaTime;
 	}
 	else {
-		attack(position, direction);
+		isAttacking = true;
+		attack();
 	}
 
 	//Face direction
 	if (direction.x > 0 && distance > 5) { scale.x = mirror * -1; }
 	else { scale.x = mirror; }
+
+	return direction;
 }
 
-void Enemy::attack(Vector2 pos, Vector2 dir) { }
+void Enemy::attack() { }
 
 Rectangle Enemy::getRect() {
 	//Only legs

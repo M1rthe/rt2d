@@ -18,7 +18,7 @@ public:
 private:
 
 	//Functions
-	void attack(Vector2 pos, Vector2 dir) override;
+	void attack() override;
 	//Variables
 };
 

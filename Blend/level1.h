@@ -15,6 +15,7 @@
 #include "enemy.h"
 #include "enemy1.h"
 #include "enemy2.h"
+#include "item.h"
 #include "map.h"
 #include "hud.h"
 #include "collider.h"
@@ -41,23 +42,26 @@ public:
 	void addBullet(Vector2 pos, Vector2 dir);
 
 private:
-	/// @brief the rotating square in the middle of the screen
 	Map* map;
 	Player* player;
 	Enemy* human;
-	/// @brief a Timer to rotate the color every n seconds
+
 	Timer t;
+
+	int bulletCooldown = 0;
+
 	int currentCamouflage = 3;
 	bool moveByKey = true;
 
 	Vector2 mousePosition;
 	bool mouseIsOn(Vector2 position, Vector2 withinPos, Vector2 s);
+
 	vector<Enemy*> enemies;
+	vector<Bullet*> bullets;
+	vector<Item*> items;
 
 	vector<BasicEntity*> layers;
-	unsigned int topLayer = 4; //Map - player - enemy - bullets - HUD
-
-	vector<Bullet*> bullets;
+	unsigned int topLayer = 5; //Map - items - player - enemy - bullets - HUD
 
 	void instantiate();
 	void reset();

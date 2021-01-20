@@ -199,6 +199,8 @@ IF(MAKE_BLEND)
 		Blend/collider.h
 		Blend/bullet.cpp
 		Blend/bullet.h
+		Blend/item.cpp
+		Blend/item.h
 	)
 	target_link_libraries(Blend
 		${ALL_GRAPHICS_LIBS}

@@ -18,9 +18,7 @@ public:
 private:
 
 	//Functions
-	void attack(Vector2 pos, Vector2 dir) override;
-	//Variables
-	int bulletCooldown = 0;
+	void attack() override;
 };
 
 #endif /* ENEMY_H */

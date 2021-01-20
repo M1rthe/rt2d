@@ -11,14 +11,24 @@ Bullet::Bullet(Vector2 _startPosition, Vector2 _direction) : Entity() {
 	startPosition = _startPosition;
 	direction = _direction;
 
+	position = startPosition;
+
 	this->addSprite("assets/Bullet.tga");
 	this->sprite()->color = RED;
 	this->sprite()->filter(0);
 
-	this->rotation.z = direction.getAngleDeg() + 90;
-	//this->scale = Point2(0.5, 0.5);
+	this->rotation.z = atan2(direction.y, direction.x);
+	/*
+	yx = NOPE
+	yz = NOPE
+	xy = NOPE
+	xz = NOPE
+	zx = NOPE
+	zy = NOPE
+	*/
 
-	std::cout << "Bullet Added: startPosition:" << startPosition << ", direction:" << direction << "\n";
+	//direction.getAngleDeg();
+	//this->scale = Point2(0.5, 0.5);
 }
 
 Bullet::~Bullet() {
@@ -26,7 +36,7 @@ Bullet::~Bullet() {
 }
 
 void Bullet::update(float deltaTime) {
-	position += direction * deltaTime * 20;
+	position += direction * deltaTime * 100;
 }
 
 

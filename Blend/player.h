@@ -45,6 +45,8 @@ public:
 	Vector2 finalDestination;
 	int facing = RIGHT;
 
+	bool tongueIsStickedOut = false;
+
 	vector<Rectangle> colliders;
 	vector<Rectangle> movingColliders;
 
@@ -60,7 +62,6 @@ private:
 	Timer time;
 	double nextActionTime = 0.0;
 	double timeFirstStickedOutTongue = 0.0;
-	bool tongueIsStickedOut = false;
 
 	Vector2 direction;
 	Vector2 velocity;

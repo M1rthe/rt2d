@@ -88,7 +88,6 @@ void Player::clickCamouflage(int c) {
 void Player::consume() {
 	tongueIsStickedOut = true;
 	timeFirstStickedOutTongue = time.seconds();
-	std::cout << "STICK OUT TONGUE, frame:" << this->sprite()->frame() << "\n";
 }
 
 void Player::newDestination(Vector2 d) {
@@ -236,39 +235,31 @@ void Player::animation() {
 				}
 			}
 		}
-		std::cout << "isMoving, frame:" << this->sprite()->frame() << "\n";
 	}
 	if (!isMoving) {
 		if (facing == RIGHT) {
 			this->sprite()->frame(6);
 		}
 		else { this->sprite()->frame(7); }
-		std::cout << "!moving, frame:" << this->sprite()->frame() << "\n";
 	}
 	//Tongue
 	if (tongueIsStickedOut) {
 		if (time.seconds() - timeFirstStickedOutTongue > 0 && time.seconds() - timeFirstStickedOutTongue <= 0.1) {
 			if (facing == RIGHT) { this->sprite()->frame(0); }
 			if (facing == LEFT) { this->sprite()->frame(1); }
-			//std::cout << "TONGUE1, frame:"<< this->sprite()->frame() <<"\n";
 		}
 		if (time.seconds() - timeFirstStickedOutTongue > 0.1 && time.seconds() - timeFirstStickedOutTongue <= 0.3) {
 			if (facing == RIGHT) { this->sprite()->frame(2); }
 			if (facing == LEFT) { this->sprite()->frame(3); }
-			//std::cout << "TONGUE2, frame:" << this->sprite()->frame() << "\n";
 		}
 		if (time.seconds() - timeFirstStickedOutTongue > 0.3 && time.seconds() - timeFirstStickedOutTongue <= 0.4) {
 			if (facing == RIGHT) { this->sprite()->frame(0); }
 			if (facing == LEFT) { this->sprite()->frame(1); }
-			//std::cout << "TONGUE1, frame:" << this->sprite()->frame() << "\n";
 		}
 		if (time.seconds() - timeFirstStickedOutTongue > 0.4) {
 			if (facing == RIGHT) { this->sprite()->frame(6); }
 			if (facing == LEFT) { this->sprite()->frame(7); }
 			tongueIsStickedOut = false;
-			//std::cout << "DONE STICKING OUT TONGUE, frame:" << this->sprite()->frame() << "\n#####################\n";
 		}
-		std::cout << "tongueIsStickedOut, frame:" << this->sprite()->frame() << "\n";
 	}
-	std::cout << "\n#################\n\n";
 }

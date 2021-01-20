@@ -28,11 +28,14 @@ public:
 
 	//Functions
 	Rectangle getRect();
-	virtual void attack(Vector2 position, Vector2 direction);
-	void ai(float deltaTime, Vector2 playerPosition);
+	virtual void attack();
+	Vector2 ai(float deltaTime, Vector2 playerPosition);
 	//Variables
 	float mirror;
 	int actionDistance;
+	bool isAttacking = false;
+	int attackCooldown = 0;
+	int attackCooldownCounter = 0;
 
 private:
 
