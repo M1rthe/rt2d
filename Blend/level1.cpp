@@ -9,65 +9,120 @@
 
 #include "level1.h"
 
-Level1::Level1() : Scene()
-{
+Level1::Level1() : Scene() {
 	// start the timer.
 	t.start();
 
-	map = new Map();
+	//Layers
+	for (unsigned int i = 0; i <= topLayer; i++) {
+		BasicEntity* layer = new BasicEntity();
+		layers.push_back(layer);
+		this->addChild(layer);
+	}
 
-	player = new Player();
-	player->position = Vector2(680, 1500);
-	player->finalDestination = player->position;
+	instantiate();
+	reset();
 
-	human = new Enemy();
-	human->position = Vector2(1800, 1300);
+	Enemy2* e1 = new Enemy2();
+	enemies.push_back(e1);
+	e1->position = Vector2(2800, 1300);
+	layers[2]->addChild(e1);
 
-	hud = new Hud();
+	/*
+	Enemy2* e2 = new Enemy2();
+	enemies.push_back(e2);
+	e2->position = Vector2(2600, 1500);
+	layers[2]->addChild(e2);
+	*/
 
-	hud->mission->message("mission");
-
-	moveByKey = true;
-
-	// create the scene 'tree'
-	// add myentity to this Scene as a child.
-	this->addChild(map);
-	this->addChild(player);
-	this->addChild(human);
-	this->addChild(hud);
+	layers[0]->addChild(map);
+	layers[1]->addChild(player);
+	layers[4]->addChild(hud);
 }
 
 
 Level1::~Level1()
 {
-	// deconstruct and delete the Tree
+	//RemoveChild (addChild)
 	this->removeChild(map);
 	this->removeChild(player);
 	this->removeChild(hud);
-	this->removeChild(human);
 
-	// delete myentity from the heap (there was a 'new' in the constructor)
+	//Delete (new)
 	delete map;
 	delete player;
 	delete hud;
-	delete human;
+
+	//Enemies
+	for (int i = 0; i < enemies.size(); i++) {
+		this->removeChild(enemies[i]);
+		delete enemies[i]; 
+		enemies[i] = nullptr; 
+	}
+	enemies.clear();
+
+	//Delete bullets
+	for (int i = 0; i < bullets.size(); i++) {
+		this->removeChild(bullets[i]);
+		delete bullets[i];
+		bullets[i] = nullptr;
+	}
+	bullets.clear();
+}
+
+void Level1::addBullet(Vector2 pos, Vector2 dir) {
+	Bullet* bullet = new Bullet(pos, dir);
+	bullets.push_back(bullet);
+	layers[3]->addChild(bullet);
+}
+
+void Level1::instantiate() {
+	map = new Map();
+	player = new Player();
+	hud = new Hud();
+}
+
+void Level1::reset() {
+	//Player
+	player->position = Vector2(3000, 1500);
+	player->finalDestination = player->position;
+	//Hud
+	hud->mission->message("mission");
+	//Booleans
+	moveByKey = true;
+	//Set stuff
+	player->colliders = map->tilesWithCollider;
 }
 
 void Level1::update(float deltaTime) {
 
-	int overlapping = map->findMostOverlappedTile(Vector2(player->position.x, player->position.y), Vector2(player->scale.x * player->sprite()->size.x, player->scale.y * player->sprite()->size.y), player->camouflageFrame, player->facing);
-	std::cout << "overlapping: "<< overlapping<<", supposed to be > 45\n";
-	if (overlapping > 45) { 
-		hud->camouflagegauge->overlappingSpace->message("HIDDEN");
-		human->playerIsHidden = false;
-		//hud->camouflagegauge->overlappingSpace->message("HIDDEN("+ to_string(overlapping) +")");
-	} if (overlapping <= 45) {
-		hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN");
-		human->playerIsHidden = true;
-		//hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN(" + to_string(overlapping) + ")");
+	//Enemies
+	for (int i = 0; i < enemies.size(); i++) {
+		//Collision
+		player->movingColliders.clear();
+		player->movingColliders.push_back(enemies[i]->getRect());
+		//Layers
+		if (player->position.y > enemies[i]->position.y + 50) {
+			layers[1]->addChild(enemies[i]);
+			layers[2]->addChild(player);
+		}
+		else {
+			layers[1]->addChild(player);
+			layers[2]->addChild(enemies[i]);
+		}
 	}
 
-	//dhud->camouflagegauge->overlappingSpace->message(to_string(overlapping));
+	//Overlapping
+	int overlapping = map->findMostOverlappedTile(Vector2(player->position.x, player->position.y), Vector2(player->scale.x * player->sprite()->size.x, player->scale.y * player->sprite()->size.y), player->camouflageFrame, player->facing);
+	if (overlapping > 45) { 
+		hud->camouflagegauge->overlappingSpace->message("HIDDEN");
+	} 
+	if (overlapping <= 45) {
+		hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN");
+		for (int i = 0; i < enemies.size(); i++) {
+			enemies[i]->ai(deltaTime, player->position);
+		}
+	}
 
 	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
 
@@ -78,6 +133,7 @@ void Level1::update(float deltaTime) {
 	// ###############################################################
 	// Manage clickevents
 	// ###############################################################
+
 	player->check4input(deltaTime, map, true);
 
 	mousePosition = Vector2(Vector2(input()->getMouseX() + camera()->position.x - SWIDTH / 2, input()->getMouseY() + camera()->position.y - SHEIGHT / 2));
@@ -117,39 +173,6 @@ void Level1::update(float deltaTime) {
 
 	this->camera()->position = player->position;
 	this->camera()->position.z = 650;
-
-	// ###############################################################
-	// Collision
-	// ###############################################################
-	/*
-	player->limitLeft = false;
-	player->limitUp = false;
-	player->limitDown = false;
-	player->limitRight = false;
-
-	for (int i = 0; i < map->tilesWithCollider.size(); i++) {
-		//player->collideWithTile(map->getRectTile(i));
-		if (Collider::rectangle2rectangle(map->getRectTile(i), player->getRect())) {
-			std::cout << "Tile[" << i << "]: ";
-			if (player->getRect().y + player->getRect().height - 11 < map->getRectTile(i).y) {
-				std::cout << "Above. ";
-				player->limitDown = true;
-			}
-			if (player->getRect().y + 11 > map->getRectTile(i).y + map->getRectTile(i).height) {
-				std::cout << "Below. ";
-				player->limitUp = true;
-			}
-			if (player->getRect().x + player->getRect().width - 11 < map->getRectTile(i).x) {
-				std::cout << "Left. ";
-				player->limitRight = true;
-			}
-			if (player->getRect().x + 11 > map->getRectTile(i).x + map->getRectTile(i).width) {
-				std::cout << "Right. ";
-				player->limitLeft = true;
-			}
-		}
-		
-	}*/
 }
 
 bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {

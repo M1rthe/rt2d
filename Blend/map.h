@@ -38,10 +38,10 @@ public:
 	vector<Rectangle> tilesWithCollider;
 	int findMostOverlappedTile(Vector2 position, Vector2 size, int camouflage, int facing);
 	Rectangle getRectTile(int tile);
+	vector<int> tilesWithCollision;
 
 private:
 	BasicEntity *grid;
-	vector<int> tilesWithCollision;
 
 	string* level = new string[2048]{ //64 x 32
 	"f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f","f",

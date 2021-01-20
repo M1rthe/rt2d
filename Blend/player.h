@@ -18,7 +18,6 @@
 #include "map.h"
 using namespace std;
 
-
 #define LEFT 0 
 #define RIGHT 1
 
@@ -46,12 +45,14 @@ public:
 	Vector2 finalDestination;
 	int facing = RIGHT;
 
+	vector<Rectangle> colliders;
+	vector<Rectangle> movingColliders;
+
 private:
 
 	void animation();
 	void consume();
-	void moveByClick(float dt);
-	void move(Vector2 direction, float speed, float deltaTime, vector<Rectangle> tileRects);
+	void move(Vector2 direction, float speed, float deltaTime);
 
 	Vector2 oldPosition;
 	bool collided;

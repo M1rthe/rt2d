@@ -23,6 +23,8 @@ Player::Player() : Entity() {
 	this->scale = Point2(3.5, 3.5);
 	this->sprite()->frame(6);
 
+	clickCamouflage(1);
+
 	/*
 	0: tongue1 right
 	1: tongue1 left
@@ -42,14 +44,19 @@ void Player::update(float deltaTime) {
 	animation();
 }
 
-void Player::move(Vector2 direction, float speed, float deltaTime, vector<Rectangle> tileRects) {
+void Player::move(Vector2 direction, float speed, float deltaTime) {
+
 	//x
 	oldPosition = position;
 	position.x += direction.x * speed * deltaTime;
 	collided = false;
-	for (int i = 0; i < tileRects.size(); i++) {
-		bool collidedBoolX = Collider::rectangle2rectangle(getRect(), tileRects[i]);
+	for (int i = 0; i < colliders.size(); i++) { //Not moving (tiles)
+		bool collidedBoolX = Collider::rectangle2rectangle(getRect(), colliders[i]);
 		if (collidedBoolX) { collided = collidedBoolX; }
+	}
+	for (int ii = 0; ii < movingColliders.size(); ii++) { //Moving (enemies)
+		bool collidedBoolX = Collider::rectangle2rectangle(getRect(), movingColliders[ii]);
+		if (collidedBoolX) { if (!collided) { collided = collidedBoolX; } }
 	}
 	if (collided) { position = oldPosition; }
 
@@ -57,9 +64,13 @@ void Player::move(Vector2 direction, float speed, float deltaTime, vector<Rectan
 	oldPosition = position;
 	position.y += direction.y * speed * deltaTime;
 	collided = false;
-	for (int i = 0; i < tileRects.size(); i++) {
-		bool collidedBoolY = Collider::rectangle2rectangle(getRect(), tileRects[i]);
+	for (int iii = 0; iii < colliders.size(); iii++) { //Not moving (tiles)
+		bool collidedBoolY = Collider::rectangle2rectangle(getRect(), colliders[iii]);
 		if (collidedBoolY) { collided = collidedBoolY; }
+	}
+	for (int iiii = 0; iiii < movingColliders.size(); iiii++) { //Moving (enemies)
+		bool collidedBoolY = Collider::rectangle2rectangle(getRect(), movingColliders[iiii]);
+		if (collidedBoolY) { if (!collided) { collided = collidedBoolY; }; }
 	}
 	if (collided) { position = oldPosition; }
 }
@@ -130,7 +141,7 @@ void Player::check4input(float dt, Map* map, bool moveWithKeys) {
 
 		speed = 250.0;
 		dir.normalize();
-		move(dir, speed, dt, map->tilesWithCollider);
+		move(dir, speed, dt);
 	}
 	//Click to go
 	if (!moveWithKeys) {
@@ -186,7 +197,7 @@ void Player::check4input(float dt, Map* map, bool moveWithKeys) {
 			}
 
 			//Move
-			move(velocity, speed, dt, map->tilesWithCollider);
+			move(velocity, speed, dt);
 
 			//Animation
 			isMoving = true;

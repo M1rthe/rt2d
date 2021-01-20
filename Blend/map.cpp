@@ -82,7 +82,7 @@ Map::Map() : Entity() {
 			}
 		}
 
-		if (level[i].at(level[i].length() - 1) == 'F') { grid->spritebatch()[i]->spritescale.x *= -1; std::cout << "sprite with frame " << f << "is supposed to be flipped\n"; }
+		if (level[i].at(level[i].length() - 1) == 'F') { grid->spritebatch()[i]->spritescale.x *= -1; }
 
 		grid->spritebatch()[i]->filter(0);
 		grid->spritebatch()[i]->frame(f);

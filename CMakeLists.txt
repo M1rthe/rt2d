@@ -183,6 +183,10 @@ IF(MAKE_BLEND)
 		Blend/camouflagegauge.h
 		Blend/enemy.cpp
 		Blend/enemy.h
+		Blend/enemy1.cpp
+		Blend/enemy1.h
+		Blend/enemy2.cpp
+		Blend/enemy2.h
 		Blend/hud.cpp
 		Blend/hud.h
 		Blend/level1.cpp
@@ -193,6 +197,8 @@ IF(MAKE_BLEND)
 		Blend/player.cpp
 		Blend/player.h
 		Blend/collider.h
+		Blend/bullet.cpp
+		Blend/bullet.h
 	)
 	target_link_libraries(Blend
 		${ALL_GRAPHICS_LIBS}

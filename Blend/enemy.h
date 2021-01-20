@@ -10,23 +10,29 @@
 #define ENEMY_H
 
 #include <rt2d/entity.h>
+#include "collider.h"
+#include "basicentity.h"
+#include "bullet.h"
+
+using namespace std;
 
  /// @brief The MyEntity class is the Entity implementation.
-class Enemy : public Entity
-{
+class Enemy : public Entity {
+
 public:
 
-	/// @brief Constructor
-	Enemy();
-	/// @brief Destructor
+	//Standard entity function
+	Enemy(); 
 	virtual ~Enemy();
-
-	/// @brief update is automatically called every frame
-	/// @param deltaTime the elapsed time in seconds
-	/// @return void
 	virtual void update(float deltaTime);
 
-	bool playerIsHidden;
+	//Functions
+	Rectangle getRect();
+	virtual void attack(Vector2 position, Vector2 direction);
+	void ai(float deltaTime, Vector2 playerPosition);
+	//Variables
+	float mirror;
+	int actionDistance;
 
 private:
 

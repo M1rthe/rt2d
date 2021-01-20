@@ -13,12 +13,17 @@
 #include <rt2d/camera.h>
 #include "player.h"
 #include "enemy.h"
+#include "enemy1.h"
+#include "enemy2.h"
 #include "map.h"
 #include "hud.h"
+#include "collider.h"
 
- /// @brief The MyScene class is the Scene implementation.
-class Level1 : public Scene
-{
+using namespace std;
+
+/// @brief The MyScene class is the Scene implementation.
+class Level1 : public Scene {
+
 public:
 
 	Hud* hud;
@@ -33,6 +38,8 @@ public:
 	/// @return void
 	virtual void update(float deltaTime);
 
+	void addBullet(Vector2 pos, Vector2 dir);
+
 private:
 	/// @brief the rotating square in the middle of the screen
 	Map* map;
@@ -45,6 +52,15 @@ private:
 
 	Vector2 mousePosition;
 	bool mouseIsOn(Vector2 position, Vector2 withinPos, Vector2 s);
+	vector<Enemy*> enemies;
+
+	vector<BasicEntity*> layers;
+	unsigned int topLayer = 4; //Map - player - enemy - bullets - HUD
+
+	vector<Bullet*> bullets;
+
+	void instantiate();
+	void reset();
 };
 
 #endif /* LEVEL1_H */
