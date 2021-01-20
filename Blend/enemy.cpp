@@ -29,7 +29,8 @@ void Enemy::ai(float deltaTime, Vector2 playerPosition) {
 	Vector2 direction = Vector2(0, 0);
 
 	//get direction
-	direction = (playerPosition - Vector2(position.x + (sprite()->width() / 2), position.y));
+	direction = (playerPosition - position);
+	
 	//get distance
 	distance = sqrt(direction.x * direction.x + direction.y * direction.y);
 	//normalize dir

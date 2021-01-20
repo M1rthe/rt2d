@@ -23,17 +23,15 @@ Level1::Level1() : Scene() {
 	instantiate();
 	reset();
 
-	Enemy2* e1 = new Enemy2();
+	Enemy1* e1 = new Enemy1();
 	enemies.push_back(e1);
 	e1->position = Vector2(2800, 1300);
 	layers[2]->addChild(e1);
 
-	/*
 	Enemy2* e2 = new Enemy2();
 	enemies.push_back(e2);
 	e2->position = Vector2(2600, 1500);
 	layers[2]->addChild(e2);
-	*/
 
 	layers[0]->addChild(map);
 	layers[1]->addChild(player);
@@ -96,8 +94,11 @@ void Level1::reset() {
 
 void Level1::update(float deltaTime) {
 
+	layers[4]->ddClear();
 	//Enemies
 	for (int i = 0; i < enemies.size(); i++) {
+		//DebugDraw
+		layers[4]->ddLine(player->position, enemies[i]->position, RED);
 		//Collision
 		player->movingColliders.clear();
 		player->movingColliders.push_back(enemies[i]->getRect());
