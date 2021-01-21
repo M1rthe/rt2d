@@ -13,6 +13,7 @@
 #include "collider.h"
 #include "basicentity.h"
 #include "bullet.h"
+#include <rt2d/timer.h>
 
 using namespace std;
 
@@ -33,9 +34,10 @@ public:
 	//Variables
 	float mirror;
 	int actionDistance;
-	bool isAttacking = false;
-	int attackCooldown = 0;
-	int attackCooldownCounter = 0;
+	bool isAttackedThisFrame = false;
+	double attackCooldown = 0.0;
+	double timeFirstAttacked = 0.0;
+	Timer time;
 
 private:
 

@@ -188,12 +188,21 @@ float Map::CalculateDistance(Vector2 p1, Vector2 p2)
 
 Rectangle Map::getRectTile(int tile) {
 
-	float x = grid->spritebatch()[tilesWithCollision[tile]]->spriteposition.x + cellwidth;
-	float y = grid->spritebatch()[tilesWithCollision[tile]]->spriteposition.y - 5;
-	float w = cellwidth/2;
-	float h = cellheight/2;
+	/*
+	return Rectangle(
+		grid->spritebatch()[tilesWithCollision[tile]]->spriteposition.x + cellwidth,
+		grid->spritebatch()[tilesWithCollision[tile]]->spriteposition.y - 5,
+		cellwidth / 2,
+		cellheight / 2
+	);
+	*/
 
-	return Rectangle(x, y, w, h);
+	return Rectangle(
+		grid->spritebatch()[tilesWithCollision[tile]]->spriteposition.x - (cellwidth / 2),
+		grid->spritebatch()[tilesWithCollision[tile]]->spriteposition.y - (cellheight / 2),
+		cellwidth,
+		cellheight
+	);
 }
 
 void Map::update(float deltaTime) {

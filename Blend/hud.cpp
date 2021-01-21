@@ -23,15 +23,13 @@ Hud::Hud() : Entity() {
 	margin = SWIDTH * 0.07;
 	size = 128;
 
+	mission->scale = Point2(0.5, 0.5);
+
 	mission->position = Vector2(margin, margin);
 	camouflage1->position = Vector2(SWIDTH - (margin * 1) - (size/2 * 0.0), SHEIGHT - margin);
 	camouflage2->position = Vector2(SWIDTH - (margin * 2) - (size/2 * 1.0), SHEIGHT - margin);
 	camouflage3->position = Vector2(SWIDTH - (margin * 3) - (size/2 * 2.0), SHEIGHT - margin);
 	camouflagegauge->position = Vector2(margin, SHEIGHT - margin);
-
-	std::cout << "added camouflage 1 at " << camouflage1->position << "\n";
-	std::cout << "added camouflage 2 at " << camouflage2->position << "\n";
-	std::cout << "added camouflage 3 at " << camouflage3->position << "\n";
 
 	camouflage1->setCamouflage(0);
 	camouflage2->setCamouflage(2);

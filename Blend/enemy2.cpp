@@ -7,7 +7,7 @@ Enemy2::Enemy2() : Enemy() {
 	this->sprite()->filter(0);
 	this->scale = Point2(3, 3);
 	mirror = scale.x;
-	attackCooldown = 400;
+	attackCooldown = 3.0;
 }
 
 Enemy2::~Enemy2() {
@@ -19,7 +19,12 @@ void Enemy2::update(float deltaTime) {
 }
 
 void Enemy2::attack() {
-	if (attackCooldownCounter > attackCooldown) {
+	
+	if (time.seconds() - timeFirstAttacked > attackCooldown) {
+
+		isAttackedThisFrame = true;
+		timeFirstAttacked = time.seconds();
+
 		std::cout << "Got hit by Enemy2\n";
 	}
 }

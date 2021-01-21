@@ -7,6 +7,9 @@
 #include "enemy.h"
 
 Enemy::Enemy() : Entity() {
+
+	time.start();
+
 	actionDistance = 250;
 	this->addSprite("assets/Enemies/Human1.tga");
 	this->sprite()->filter(0);
@@ -24,7 +27,7 @@ void Enemy::update(float deltaTime) {
 
 Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition) {
 
-	isAttacking = false;
+	isAttackedThisFrame = false;
 
 	float speed = 80;
 	float distance;
@@ -42,7 +45,7 @@ Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition) {
 		position += direction * speed * deltaTime;
 	}
 	else {
-		isAttacking = true;
+		//if (!isAttacking) { timeFirstAttacked = time.seconds(); std::cout << "setting timeFirstAttacked\n"; }
 		attack();
 	}
 
@@ -57,11 +60,22 @@ void Enemy::attack() { }
 
 Rectangle Enemy::getRect() {
 	//Only legs
+	/*
 	return Rectangle(
 		position.x + sprite()->width() + 20,
 		position.y - sprite()->height() + 160,
 		sprite()->width() + 20, 
 		sprite()->height() - 55
+	);
+	*/
+	float scaleX = scale.x;
+	if (scaleX < 0) { scaleX *= -1; }
+
+	return Rectangle(
+		position.x - (sprite()->width() * scaleX / 2),
+		position.y + (sprite()->height() * scale.y / 2) - 20,
+		sprite()->width() * scaleX,
+		20
 	);
 }
 

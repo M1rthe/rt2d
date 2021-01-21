@@ -51,11 +51,11 @@ void Player::move(Vector2 direction, float speed, float deltaTime) {
 	position.x += direction.x * speed * deltaTime;
 	collided = false;
 	for (int i = 0; i < colliders.size(); i++) { //Not moving (tiles)
-		bool collidedBoolX = Collider::rectangle2rectangle(getRect(), colliders[i]);
+		bool collidedBoolX = Collider::rectangle2rectangle(getRect(0), colliders[i]);
 		if (collidedBoolX) { collided = collidedBoolX; }
 	}
 	for (int ii = 0; ii < movingColliders.size(); ii++) { //Moving (enemies)
-		bool collidedBoolX = Collider::rectangle2rectangle(getRect(), movingColliders[ii]);
+		bool collidedBoolX = Collider::rectangle2rectangle(getRect(0), movingColliders[ii]);
 		if (collidedBoolX) { if (!collided) { collided = collidedBoolX; } }
 	}
 	if (collided) { position = oldPosition; }
@@ -65,11 +65,11 @@ void Player::move(Vector2 direction, float speed, float deltaTime) {
 	position.y += direction.y * speed * deltaTime;
 	collided = false;
 	for (int iii = 0; iii < colliders.size(); iii++) { //Not moving (tiles)
-		bool collidedBoolY = Collider::rectangle2rectangle(getRect(), colliders[iii]);
+		bool collidedBoolY = Collider::rectangle2rectangle(getRect(0), colliders[iii]);
 		if (collidedBoolY) { collided = collidedBoolY; }
 	}
 	for (int iiii = 0; iiii < movingColliders.size(); iiii++) { //Moving (enemies)
-		bool collidedBoolY = Collider::rectangle2rectangle(getRect(), movingColliders[iiii]);
+		bool collidedBoolY = Collider::rectangle2rectangle(getRect(0), movingColliders[iiii]);
 		if (collidedBoolY) { if (!collided) { collided = collidedBoolY; }; }
 	}
 	if (collided) { position = oldPosition; }
@@ -95,8 +95,40 @@ void Player::newDestination(Vector2 d) {
 	velocity *= 0;
 }
 
-Rectangle Player::getRect() { 
-	return Rectangle(position.x + 24, position.y + 12, scale.x * sprite()->size.x, scale.y * sprite()->size.y - 12);
+Rectangle Player::getRect(int wholeBody) {
+
+	if (wholeBody) { //1
+		//Body
+		if (facing == RIGHT) {
+			return Rectangle(
+				position.x - (scale.x * sprite()->size.x / 2),
+				position.y - (scale.y * sprite()->size.y / 2) + 12,
+				scale.x * sprite()->size.x - 12,
+				scale.y * sprite()->size.y - 12
+			);
+		}
+		return Rectangle(
+			position.x - (scale.x * sprite()->size.x / 2) + 12,
+			position.y - (scale.y * sprite()->size.y / 2) + 12,
+			scale.x * sprite()->size.x - 12,
+			scale.y * sprite()->size.y - 12
+		);
+	}
+	//Feet
+	if (facing == RIGHT) {
+		return Rectangle(
+			position.x - (scale.x * sprite()->size.x / 2),
+			position.y - (scale.y * sprite()->size.y / 2) + 40,
+			scale.x * sprite()->size.x - 12,
+			scale.y * sprite()->size.y - 40
+		);
+	}
+	return Rectangle(
+		position.x - (scale.x * sprite()->size.x / 2) + 12,
+		position.y - (scale.y * sprite()->size.y / 2) + 40,
+		scale.x * sprite()->size.x - 12,
+		scale.y * sprite()->size.y - 40
+	);
 }
 
 void Player::check4input(float dt, Map* map, bool moveWithKeys) {
@@ -127,6 +159,7 @@ void Player::check4input(float dt, Map* map, bool moveWithKeys) {
 		if (input()->getKey(KeyCode::D) || input()->getKey(KeyCode::Right)) {
 			if (position.x + (scale.x * sprite()->width() / 2) - 45 <= map->position.x - SWIDTH / 2 + (map->cellwidth * map->gridwidth)) {
 				dir.x += 1;
+				if (facing == LEFT) { position.x += 12; } //Anders komt je staart vast in de muur wanneer je draait
 				facing = RIGHT;
 				isMoving = true;
 			}
@@ -134,6 +167,7 @@ void Player::check4input(float dt, Map* map, bool moveWithKeys) {
 		if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::Left)) {
 			if (position.x + (scale.x * sprite()->width() / 2) - 50 >= map->position.x + SWIDTH / 2) { 
 				dir.x -= 1;
+				if (facing == RIGHT) { position.x -= 12; } //Anders komt je staart vast in de muur wanneer je draait
 				facing = LEFT;
 				isMoving = true;
 			}

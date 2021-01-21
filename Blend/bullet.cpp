@@ -36,7 +36,16 @@ Bullet::~Bullet() {
 }
 
 void Bullet::update(float deltaTime) {
-	position += direction * deltaTime * 100;
+	position += direction * deltaTime * 200;
+}
+
+Rectangle Bullet::getRect() {
+	return Rectangle(
+		position.x,
+		position.y,
+		sprite()->width() * scale.x,
+		sprite()->height() * scale.y
+	);
 }
 
 

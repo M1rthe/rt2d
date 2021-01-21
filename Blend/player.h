@@ -39,7 +39,7 @@ public:
 	void check4input(float dt, Map* map, bool moveWithKeys);
 	void clickCamouflage(int c);
 	void newDestination(Vector2 d);
-	Rectangle getRect();
+	Rectangle getRect(int wholeBody);
 
 	int camouflageFrame = 65; //doesnt exists, so its just green, default cameleon
 	Vector2 finalDestination;

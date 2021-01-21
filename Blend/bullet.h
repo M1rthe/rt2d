@@ -10,21 +10,17 @@
 #define BULLET_H
 
 #include <rt2d/entity.h>
+#include "collider.h"
 
- /// @brief The MyEntity class is the Entity implementation.
-class Bullet : public Entity
-{
+class Bullet : public Entity {
+
 public:
 
-	/// @brief Constructor
 	Bullet(Vector2 _startPosition, Vector2 _direction);
-	/// @brief Destructor
 	virtual ~Bullet();
-
-	/// @brief update is automatically called every frame
-	/// @param deltaTime the elapsed time in seconds
-	/// @return void
 	virtual void update(float deltaTime);
+
+	Rectangle getRect();
 
 private:
 	Vector2 startPosition;

@@ -38,6 +38,7 @@ Level1::Level1() : Scene() {
 	Item* donut = new Item("Donut");
 	items.push_back(donut);
 	donut->position = Vector2(2100, 1500);
+
 	layers[0]->addChild(map);
 	layers[1]->addChild(donut);
 	layers[2]->addChild(player);
@@ -93,7 +94,6 @@ Level1::~Level1()
 }
 
 void Level1::addBullet(Vector2 pos, Vector2 dir) {
-	std::cout << "addBullet(pos:"<<pos<<", dir:"<<dir<<")\n";
 	Bullet* bullet = new Bullet(pos, dir);
 	bullets.push_back(bullet);
 	layers[4]->addChild(bullet);
@@ -110,7 +110,7 @@ void Level1::reset() {
 	player->position = Vector2(3000, 1500);
 	player->finalDestination = player->position;
 	//Hud
-	hud->mission->message("mission");
+	hud->mission->message("Eat the donut laying in the police station, by pressing 'c'.");
 	//Booleans
 	moveByKey = true;
 	//Set stuff
@@ -119,32 +119,30 @@ void Level1::reset() {
 
 void Level1::update(float deltaTime) {
 
+	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
+
 	// ###############################################################
 	// Item collision
 	// ###############################################################
-	//layers[4]->ddClear();
 
 	for (int i = items.size() - 1; i >= 0; i--) {
 
 		Point playerPos = Point2(player->position.x - ((player->sprite()->width()*player->scale.x / 2)*0.65), player->position.y);
 		if (player->facing == RIGHT) { playerPos = Point2(player->position.x + ((player->sprite()->width() * player->scale.x / 2) * 0.65), player->position.y); }
 		
-		//layers[4]->ddLine(playerPos, items[i]->position, RED);
-
 		Point2 idk = (playerPos - items[i]->position);
 		float dist = sqrt(idk.x * idk.x + idk.y * idk.y);
 
 		if (dist < 30) {
 			if (items[i]->name == "Donut") {
 				if (player->tongueIsStickedOut) {
-					std::cout << "Eated donut\n";
+					win();
 					//Delete
 					layers[1]->removeChild(items[i]);
 					delete items[i];
 					items.erase(items.begin() + i);
 				}
 			}
-			std::cout << "\n####################\n";
 		}
 	}
 
@@ -153,13 +151,19 @@ void Level1::update(float deltaTime) {
 	// ###############################################################
 	for (int i = bullets.size() - 1; i >= 0; i--) {
 
+		//Delete bullets the player can't see
 		Point3 idk = (player->position - bullets[i]->position);
 		float dist = sqrt(idk.x * idk.x + idk.y * idk.y);
 
-		if (dist > 1000) { //Delete bullets the player can't see
+		if (dist > 1000) { 
 			layers[4]->removeChild(bullets[i]);
 			delete bullets[i];
 			bullets.erase(bullets.begin() + i);
+		}
+
+		//Player collides with bullet
+		if (Collider::rectangle2rectangle(player->getRect(0), bullets[i]->getRect())) {
+			die();
 		}
 	}
 	// ###############################################################
@@ -170,8 +174,9 @@ void Level1::update(float deltaTime) {
 		//Collision
 		player->movingColliders.clear();
 		player->movingColliders.push_back(enemies[i]->getRect());
+
 		//Layers
-		if (player->position.y > enemies[i]->position.y + 50) {
+		if (player->getRect(0).y > enemies[i]->getRect().y) {
 			layers[2]->addChild(enemies[i]);
 			layers[3]->addChild(player);
 		}
@@ -196,13 +201,8 @@ void Level1::update(float deltaTime) {
 			Vector2 direction = enemies[i]->ai(deltaTime, player->position);
 
 			//Shooting
-			if (enemies[i]->isAttacking) {
-				if (enemies[i]->attackCooldownCounter > enemies[i]->attackCooldown) {
-					//if (enemies[i]->scale.x < 0) { direction.x *= -1; }
-					addBullet(enemies[i]->position, direction);
-					enemies[i]->attackCooldownCounter = 0;
-				}
-				enemies[i]->attackCooldownCounter++;
+			if (enemies[i]->isAttackedThisFrame) {
+				addBullet(enemies[i]->position, direction);
 			}
 		}
 	}	
@@ -254,8 +254,6 @@ void Level1::update(float deltaTime) {
 
 	this->camera()->position = player->position;
 	this->camera()->position.z = 650;
-
-	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
 }
 
 bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
@@ -269,4 +267,12 @@ bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
 	}
 
 	return false;
+}
+
+void Level1::die() {
+	std::cout << "DIE\n";
+}
+
+void Level1::win() {
+	std::cout << "WIN\n";
 }

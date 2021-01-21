@@ -65,6 +65,8 @@ private:
 
 	void instantiate();
 	void reset();
+	void die();
+	void win();
 };
 
 #endif /* LEVEL1_H */
