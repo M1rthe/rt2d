@@ -23,7 +23,7 @@ Level1::Level1() : Scene() {
 		this->addChild(layer);
 	}
 
-	Enemy1* e1 = new Enemy1();
+	Enemy2* e1 = new Enemy2();
 	enemies.push_back(e1);
 	e1->position = Vector2(2800, 1300);
 	layers[2]->addChild(e1);
@@ -209,13 +209,20 @@ void Level1::update(float deltaTime) {
 		//Set player movingColliders vector
 		player->movingColliders.clear();
 		player->movingColliders.push_back(enemies[i]->getRect());
+		//Set enemies playerCollider
+		enemies[i]->playerCollider = player->getRect(0);
 
 		//AI
 		Vector2 direction = enemies[i]->ai(deltaTime, player->position, overlapping <= 45);
 
 		//Shooting
 		if (enemies[i]->isAttackedThisFrame) {
-			addBullet(enemies[i]->position, direction);
+			if (enemies[i]->type == 1) {
+				addBullet(enemies[i]->position, direction);
+			}
+			else {
+				std::cout << "Swing around with knife or fly swatter\n";
+			}
 		}
 
 		//Layers
@@ -242,8 +249,6 @@ void Level1::update(float deltaTime) {
 	}
 
 	if (input()->getMouseDown(0)) {
-
-		std::cout << "mouseDown\n";
 
 		if (mouseIsOn(mousePosition, hud->camouflage1->position + hud->position, Vector2(hud->camouflage1->sprite()->width() * hud->camouflage1->scale.x, hud->camouflage1->sprite()->height() * hud->camouflage1->scale.y))) {
 			if (currentCamouflage != 1) {

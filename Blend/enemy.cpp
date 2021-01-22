@@ -27,6 +27,15 @@ void Enemy::update(float deltaTime) {
 
 Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamouflaged) {
 
+	if (!canSeePlayer) {
+		if (time.seconds() - timeWhenTurnedAround > timeToTurnAround) {
+			scale.x *= -1;
+
+			double f = (double)rand() / RAND_MAX;
+			timeToTurnAround = time.seconds() + 5 + f * 20;
+		}
+	}
+
 	isAttackedThisFrame = false;
 
 	float speed = 80;
@@ -51,6 +60,9 @@ Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamoufla
 				bool collidedBoolX = Collider::rectangle2rectangle(getRect(), colliders[i]);
 				if (collidedBoolX) { collided = collidedBoolX; }
 			}
+			bool collidedBoolX = Collider::rectangle2rectangle(getRect(), playerCollider);
+			if (collidedBoolX) { if (!collided) { collided = collidedBoolX; } }
+
 			if (collided) { position = oldPosition; }
 
 			//y
@@ -61,16 +73,26 @@ Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamoufla
 				bool collidedBoolY = Collider::rectangle2rectangle(getRect(), colliders[i]);
 				if (collidedBoolY) { collided = collidedBoolY; }
 			}
+			bool collidedBoolY = Collider::rectangle2rectangle(getRect(), playerCollider);
+			if (collidedBoolY) { if (!collided) { collided = collidedBoolY; } }
+
 			if (collided) { position = oldPosition; }
 		}
-		else {
-			attack();
+		if (distance < actionDistance) {
+			if (time.seconds() - timeWhenTurnedAround > 0.5) { //Because its kinda scary if it turns around and instantly shoots. So I give the enemy half a second to aim
+				attack();
+			}
 		}
+		/*else {
+			attack();
+		}*/
 
 		//Face direction
 		if (distance > 5) { 
+			float scaleBefore = scale.x;
 			if (playerPosition.x > position.x) { scale.x = mirror * -1; }
-			else { scale.x = mirror; }
+			if (playerPosition.x < position.x) { scale.x = mirror; }
+			if (scaleBefore != scale.x) { timeWhenTurnedAround = time.seconds(); }
 		} 
 	}
 

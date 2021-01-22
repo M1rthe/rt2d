@@ -32,18 +32,26 @@ public:
 	virtual void attack();
 	Vector2 ai(float deltaTime, Vector2 playerPosition, bool playerIsCamouflaged);
 	//Variables
+	int type;
 	float mirror;
 	int actionDistance;
 	bool isAttackedThisFrame = false;
 
+	//AttackCooldown
 	double attackCooldown = 0.0;
 	double timeFirstAttacked = 0.0;
+	//Time after turned around
+	double timeWhenTurnedAround = 0.0;
+	//Turn around
+	double timeToTurnAround = 0.0;
+	//Time
 	Timer time;
 
 	Vector2 oldPosition;
 	bool collided;
 
 	vector<Rectangle> colliders;
+	Rectangle playerCollider = Rectangle(0,0,0,0);
 
 private:
 	bool cast(Vector2 playerPos, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
