@@ -10,8 +10,11 @@
 #include "level1.h"
 
 Level1::Level1() : Scene() {
+
 	// start the timer.
 	t.start();
+
+	std::cout << "\n\n\n";
 
 	//Layers
 	for (unsigned int i = 0; i <= topLayer; i++) {
@@ -19,9 +22,6 @@ Level1::Level1() : Scene() {
 		layers.push_back(layer);
 		this->addChild(layer);
 	}
-
-	instantiate();
-	reset();
 
 	Enemy1* e1 = new Enemy1();
 	enemies.push_back(e1);
@@ -39,12 +39,16 @@ Level1::Level1() : Scene() {
 	items.push_back(donut);
 	donut->position = Vector2(2100, 1500);
 
+	instantiate();
+	reset();
+
 	layers[0]->addChild(map);
 	layers[1]->addChild(donut);
 	layers[2]->addChild(player);
 	layers[5]->addChild(hud);
+	
+	std::cout << "\n\n\n";
 }
-
 
 Level1::~Level1()
 {
@@ -91,6 +95,8 @@ Level1::~Level1()
 		layers[i] = nullptr;
 	}
 	layers.clear();
+
+	std::cout << "\n\n\n";
 }
 
 void Level1::addBullet(Vector2 pos, Vector2 dir) {
@@ -109,12 +115,17 @@ void Level1::reset() {
 	//Player
 	player->position = Vector2(3000, 1500);
 	player->finalDestination = player->position;
+	player->clickCamouflage(1);
+	currentCamouflage = 1;
 	//Hud
 	hud->mission->message("Eat the donut laying in the police station, by pressing 'c'.");
 	//Booleans
 	moveByKey = true;
 	//Set stuff
 	player->colliders = map->tilesWithCollider;
+	for (int i = 0; i < enemies.size(); i++) {
+		enemies[i]->colliders = map->tilesWithCollider;
+	}
 }
 
 void Level1::update(float deltaTime) {
@@ -151,38 +162,31 @@ void Level1::update(float deltaTime) {
 	// ###############################################################
 	for (int i = bullets.size() - 1; i >= 0; i--) {
 
+		bool removeBullet = false;
+
+		//Collision
+		if (Collider::rectangle2rectangle(player->getRect(0), bullets[i]->getRect())) {
+			die();
+		}
+
+		for (int ii = 0; ii < map->tilesWithCollider.size(); ii++) {
+			if (Collider::rectangle2rectangle(map->tilesWithCollider[ii], bullets[i]->getRect())) {
+				removeBullet = true;
+			}
+		}
+
 		//Delete bullets the player can't see
 		Point3 idk = (player->position - bullets[i]->position);
 		float dist = sqrt(idk.x * idk.x + idk.y * idk.y);
 
 		if (dist > 1000) { 
+			removeBullet = true;
+		}
+
+		if (removeBullet) {
 			layers[4]->removeChild(bullets[i]);
 			delete bullets[i];
 			bullets.erase(bullets.begin() + i);
-		}
-
-		//Player collides with bullet
-		if (Collider::rectangle2rectangle(player->getRect(0), bullets[i]->getRect())) {
-			die();
-		}
-	}
-	// ###############################################################
-	// Enemies
-	// ###############################################################
-	for (int i = 0; i < enemies.size(); i++) {
-
-		//Collision
-		player->movingColliders.clear();
-		player->movingColliders.push_back(enemies[i]->getRect());
-
-		//Layers
-		if (player->getRect(0).y > enemies[i]->getRect().y) {
-			layers[2]->addChild(enemies[i]);
-			layers[3]->addChild(player);
-		}
-		else {
-			layers[2]->addChild(player);
-			layers[3]->addChild(enemies[i]);
 		}
 	}
 
@@ -195,17 +199,35 @@ void Level1::update(float deltaTime) {
 	} 
 	if (overlapping <= 45) {
 		hud->camouflagegauge->overlappingSpace->message("NOT HIDDEN");
-		for (int i = 0; i < enemies.size(); i++) {
-
-			//AI
-			Vector2 direction = enemies[i]->ai(deltaTime, player->position);
-
-			//Shooting
-			if (enemies[i]->isAttackedThisFrame) {
-				addBullet(enemies[i]->position, direction);
-			}
-		}
 	}	
+
+	// ###############################################################
+	// Enemies
+	// ###############################################################
+	for (int i = 0; i < enemies.size(); i++) {
+
+		//Set player movingColliders vector
+		player->movingColliders.clear();
+		player->movingColliders.push_back(enemies[i]->getRect());
+
+		//AI
+		Vector2 direction = enemies[i]->ai(deltaTime, player->position, overlapping <= 45);
+
+		//Shooting
+		if (enemies[i]->isAttackedThisFrame) {
+			addBullet(enemies[i]->position, direction);
+		}
+
+		//Layers
+		if (player->getRect(0).y > enemies[i]->getRect().y) {
+			layers[2]->addChild(enemies[i]);
+			layers[3]->addChild(player);
+		}
+		else {
+			layers[2]->addChild(player);
+			layers[3]->addChild(enemies[i]);
+		}
+	}
 
 	// ###############################################################
 	// Manage Mouse Events
@@ -220,6 +242,8 @@ void Level1::update(float deltaTime) {
 	}
 
 	if (input()->getMouseDown(0)) {
+
+		std::cout << "mouseDown\n";
 
 		if (mouseIsOn(mousePosition, hud->camouflage1->position + hud->position, Vector2(hud->camouflage1->sprite()->width() * hud->camouflage1->scale.x, hud->camouflage1->sprite()->height() * hud->camouflage1->scale.y))) {
 			if (currentCamouflage != 1) {

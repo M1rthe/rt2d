@@ -23,8 +23,6 @@ Player::Player() : Entity() {
 	this->scale = Point2(3.5, 3.5);
 	this->sprite()->frame(6);
 
-	clickCamouflage(1);
-
 	/*
 	0: tongue1 right
 	1: tongue1 left
@@ -76,6 +74,7 @@ void Player::move(Vector2 direction, float speed, float deltaTime) {
 }
 
 void Player::clickCamouflage(int c) {
+	std::cout << "clickCamouflage "<<c<<"\n";
 	if (c == 1) { addSpriteSheet("assets/kameleon/kameleonAnimatedGrass.tga", 2, 4); camouflageFrame = 0; }
 	if (c == 2) { addSpriteSheet("assets/kameleon/kameleonAnimatedBricks.tga", 2, 4); camouflageFrame = 2; }
 	if (c == 3) { addSpriteSheet("assets/kameleon/kameleonAnimated.tga", 2, 4); camouflageFrame = 65; }

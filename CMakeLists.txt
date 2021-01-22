@@ -16,7 +16,7 @@ OPTION(MAKE_SHADY "Make custom Shader application" ON)
 OPTION(MAKE_WOLFENSTEIN "Make Wolfenstein3D raycasting application" OFF)
 OPTION(MAKE_COLLISION "Make Collision application" ON)
 OPTION(MAKE_DEBUGDRAW "Make DebugDraw application" OFF)
-OPTION(MAKE_RAYCAST "Make Raycast application" OFF)
+OPTION(MAKE_RAYCAST "Make Raycast application" On)
 OPTION(MAKE_MATRIXPIXEL "Make MatrixPixel application" OFF)
 
 OPTION(USE_RS232 "Use RS232 library" OFF)

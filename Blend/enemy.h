@@ -30,17 +30,24 @@ public:
 	//Functions
 	Rectangle getRect();
 	virtual void attack();
-	Vector2 ai(float deltaTime, Vector2 playerPosition);
+	Vector2 ai(float deltaTime, Vector2 playerPosition, bool playerIsCamouflaged);
 	//Variables
 	float mirror;
 	int actionDistance;
 	bool isAttackedThisFrame = false;
+
 	double attackCooldown = 0.0;
 	double timeFirstAttacked = 0.0;
 	Timer time;
 
-private:
+	Vector2 oldPosition;
+	bool collided;
 
+	vector<Rectangle> colliders;
+
+private:
+	bool cast(Vector2 playerPos, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
+	bool canSeePlayer = false;
 };
 
 #endif /* ENEMY_H */
