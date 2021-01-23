@@ -52,10 +52,10 @@ void Player::move(Vector2 direction, float speed, float deltaTime) {
 		bool collidedBoolX = Collider::rectangle2rectangle(getRect(0), colliders[i]);
 		if (collidedBoolX) { collided = collidedBoolX; }
 	}
-	for (int ii = 0; ii < movingColliders.size(); ii++) { //Moving (enemies)
+	/*for (int ii = 0; ii < movingColliders.size(); ii++) { //Moving (enemies)
 		bool collidedBoolX = Collider::rectangle2rectangle(getRect(0), movingColliders[ii]);
 		if (collidedBoolX) { if (!collided) { collided = collidedBoolX; } }
-	}
+	}*/
 	if (collided) { position = oldPosition; }
 
 	//y
@@ -66,10 +66,10 @@ void Player::move(Vector2 direction, float speed, float deltaTime) {
 		bool collidedBoolY = Collider::rectangle2rectangle(getRect(0), colliders[iii]);
 		if (collidedBoolY) { collided = collidedBoolY; }
 	}
-	for (int iiii = 0; iiii < movingColliders.size(); iiii++) { //Moving (enemies)
+	/*for (int iiii = 0; iiii < movingColliders.size(); iiii++) { //Moving (enemies)
 		bool collidedBoolY = Collider::rectangle2rectangle(getRect(0), movingColliders[iiii]);
 		if (collidedBoolY) { if (!collided) { collided = collidedBoolY; }; }
-	}
+	}*/
 	if (collided) { position = oldPosition; }
 }
 

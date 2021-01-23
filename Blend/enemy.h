@@ -51,7 +51,7 @@ public:
 	bool collided;
 
 	vector<Rectangle> colliders;
-	Rectangle playerCollider = Rectangle(0,0,0,0);
+	//Rectangle playerCollider = Rectangle(0,0,0,0);
 
 private:
 	bool cast(Vector2 playerPos, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);

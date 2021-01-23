@@ -46,6 +46,8 @@ private:
 	Player* player;
 	Enemy* human;
 
+	Text* winOrDie;
+
 	Timer t;
 
 	int bulletCooldown = 0;
@@ -67,6 +69,12 @@ private:
 	void reset();
 	void die();
 	void win();
+
+	int offSetWinDie = 0;
+	double timeQuit = 0;
+	bool won = false;
+	double timeOfDead = 0;
+	bool dead = false;
 };
 
 #endif /* LEVEL1_H */

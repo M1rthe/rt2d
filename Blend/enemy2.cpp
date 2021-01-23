@@ -4,7 +4,7 @@ Enemy2::Enemy2() : Enemy() {
 
 	type = 2;
 
-	actionDistance = 120;
+	actionDistance = 90;
 	this->addSprite("assets/Enemies/Human1.tga");
 	this->sprite()->filter(0);
 	this->scale = Point2(3, 3);

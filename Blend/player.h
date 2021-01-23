@@ -48,7 +48,7 @@ public:
 	bool tongueIsStickedOut = false;
 
 	vector<Rectangle> colliders;
-	vector<Rectangle> movingColliders;
+	//vector<Rectangle> movingColliders;
 
 private:
 

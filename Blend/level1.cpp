@@ -37,7 +37,8 @@ Level1::Level1() : Scene() {
 
 	Item* donut = new Item("Donut");
 	items.push_back(donut);
-	donut->position = Vector2(2100, 1500);
+	//donut->position = Vector2(1600, 1300);
+	donut->position = Vector2(2100, 1300);
 
 	instantiate();
 	reset();
@@ -46,6 +47,7 @@ Level1::Level1() : Scene() {
 	layers[1]->addChild(donut);
 	layers[2]->addChild(player);
 	layers[5]->addChild(hud);
+	layers[5]->addChild(winOrDie);
 	
 	std::cout << "\n\n\n";
 }
@@ -63,6 +65,7 @@ Level1::~Level1()
 	delete map;
 	delete player;
 	delete hud;
+	delete winOrDie;
 
 	//Enemies
 	for (int i = 0; i < enemies.size(); i++) {
@@ -109,6 +112,7 @@ void Level1::instantiate() {
 	map = new Map();
 	player = new Player();
 	hud = new Hud();
+	winOrDie = new Text();
 }
 
 void Level1::reset() {
@@ -119,6 +123,7 @@ void Level1::reset() {
 	currentCamouflage = 1;
 	//Hud
 	hud->mission->message("Eat the donut laying in the police station, by pressing 'c'.");
+	winOrDie->scale = Vector2(4, 4);
 	//Booleans
 	moveByKey = true;
 	//Set stuff
@@ -131,6 +136,7 @@ void Level1::reset() {
 void Level1::update(float deltaTime) {
 
 	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
+	winOrDie->position = Point(player->position.x - SWIDTH / 2 + offSetWinDie, player->position.y);
 
 	// ###############################################################
 	// Item collision
@@ -207,13 +213,21 @@ void Level1::update(float deltaTime) {
 	for (int i = 0; i < enemies.size(); i++) {
 
 		//Set player movingColliders vector
-		player->movingColliders.clear();
-		player->movingColliders.push_back(enemies[i]->getRect());
+		//player->movingColliders.clear();
+		//player->movingColliders.push_back(enemies[i]->getRect());
 		//Set enemies playerCollider
-		enemies[i]->playerCollider = player->getRect(0);
+		//enemies[i]->playerCollider = player->getRect(0);
 
 		//AI
-		Vector2 direction = enemies[i]->ai(deltaTime, player->position, overlapping <= 45);
+		Vector2 playerPos = player->position + player->getRect(1).width / 2;
+		/*if (player->getRect(1).x + player->getRect(1).width / 2 < enemies[i]->getRect().x + enemies[i]->getRect().width / 2) {
+			playerPos.x = player->getRect(1).x + player->getRect(1).width;
+			std::cout << "Enemies must go for RIGHT side of player\n";
+		}
+		if (player->getRect(1).x + player->getRect(1).width / 2 > enemies[i]->getRect().x + enemies[i]->getRect().width / 2) {
+			std::cout << "Enemies must go for LEFT side of player\n";
+		}*/
+		Vector2 direction = enemies[i]->ai(deltaTime, playerPos, overlapping <= 45);
 
 		//Shooting
 		if (enemies[i]->isAttackedThisFrame) {
@@ -222,6 +236,7 @@ void Level1::update(float deltaTime) {
 			}
 			else {
 				std::cout << "Swing around with knife or fly swatter\n";
+				die();
 			}
 		}
 
@@ -283,6 +298,22 @@ void Level1::update(float deltaTime) {
 
 	this->camera()->position = player->position;
 	this->camera()->position.z = 650;
+
+	// ###############################################################
+	// Quit
+	// ###############################################################
+	if (won && t.seconds() > timeQuit) {
+		stop();
+	}
+
+	if (dead && t.seconds() > timeOfDead) {
+		std::cout << "Respawn\n";
+		dead = false;
+		timeOfDead = 0;
+		winOrDie->clearMessage();
+
+		reset();
+	}
 }
 
 bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
@@ -299,9 +330,21 @@ bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
 }
 
 void Level1::die() {
-	std::cout << "DIE\n";
+	if (!dead) {
+		offSetWinDie = 192;
+		winOrDie->message("YOU DIED");
+		dead = true;
+
+		timeOfDead = t.seconds() + 3;
+	}
 }
 
 void Level1::win() {
-	std::cout << "WIN\n";
+	if (!won) {
+		offSetWinDie = 128;
+		winOrDie->message("YOU WON!!");
+		won = true;
+
+		timeQuit = t.seconds() + 3;
+	}
 }

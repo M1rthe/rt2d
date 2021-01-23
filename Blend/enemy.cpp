@@ -42,8 +42,9 @@ Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamoufla
 	float distance;
 	Vector2 direction = Vector2(0, 0);
 
-	//get direction
-	direction = (playerPosition - position);
+	Vector2 enemyPos = Vector2(position.x + (getRect().width / 2), position.y + (getRect().height / 2));
+
+	direction = (playerPosition - enemyPos);
 	
 	//get distance
 	distance = sqrt(direction.x * direction.x + direction.y * direction.y);
@@ -60,8 +61,8 @@ Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamoufla
 				bool collidedBoolX = Collider::rectangle2rectangle(getRect(), colliders[i]);
 				if (collidedBoolX) { collided = collidedBoolX; }
 			}
-			bool collidedBoolX = Collider::rectangle2rectangle(getRect(), playerCollider);
-			if (collidedBoolX) { if (!collided) { collided = collidedBoolX; } }
+			//bool collidedBoolX = Collider::rectangle2rectangle(getRect(), playerCollider);
+			//if (collidedBoolX) { if (!collided) { collided = collidedBoolX; } }
 
 			if (collided) { position = oldPosition; }
 
@@ -73,8 +74,8 @@ Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamoufla
 				bool collidedBoolY = Collider::rectangle2rectangle(getRect(), colliders[i]);
 				if (collidedBoolY) { collided = collidedBoolY; }
 			}
-			bool collidedBoolY = Collider::rectangle2rectangle(getRect(), playerCollider);
-			if (collidedBoolY) { if (!collided) { collided = collidedBoolY; } }
+			//bool collidedBoolY = Collider::rectangle2rectangle(getRect(), playerCollider);
+			//if (collidedBoolY) { if (!collided) { collided = collidedBoolY; } }
 
 			if (collided) { position = oldPosition; }
 		}
@@ -176,7 +177,10 @@ bool Enemy::cast(Vector2 playerPos, float x1, float y1, float x2, float y2, floa
 		Vector2 pt;
 		pt.x = x1 + t * (x2 - x1);
 		pt.y = y1 + t * (y2 - y1);
-		if (playerPos < pt) {
+		if (playerPos < pt && Vector2(position.x, position.y) > pt) {
+			blockingView = true;
+		}
+		if (playerPos > pt && Vector2(position.x, position.y) < pt) {
 			blockingView = true;
 		}
 	}
