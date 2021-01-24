@@ -1,11 +1,3 @@
-/**
- * Copyright 2015 Your Name <you@yourhost.com>
- *
- * @file myscene.h
- *
- * @brief description of MyScene behavior.
- */
-
 #ifndef LEVEL1_H
 #define LEVEL1_H
 
@@ -22,58 +14,80 @@
 
 using namespace std;
 
-/// @brief The MyScene class is the Scene implementation.
+/// @brief Level1 extends from Scene
 class Level1 : public Scene {
 
 public:
-
-	Hud* hud;
-
 	/// @brief Constructor
 	Level1();
 	/// @brief Destructor
 	virtual ~Level1();
-
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
 	/// @return void
 	virtual void update(float deltaTime);
 
-	void addBullet(Vector2 pos, Vector2 dir);
-
 private:
-	Map* map;
-	Player* player;
-	Enemy* human;
-
-	Text* winOrDie;
-
-	Timer t;
-
-	int bulletCooldown = 0;
-
-	int currentCamouflage = 3;
-	bool moveByKey = true;
-
-	Vector2 mousePosition;
-	bool mouseIsOn(Vector2 position, Vector2 withinPos, Vector2 s);
-
-	vector<Enemy*> enemies;
-	vector<Bullet*> bullets;
-	vector<Item*> items;
-
-	vector<BasicEntity*> layers;
-	unsigned int topLayer = 5; //Map - items - player - enemy - bullets - HUD
 
 	void instantiate();
 	void reset();
 	void die();
 	void win();
 
+	/// @brief Add bullet to scene
+	/// @param position 
+	/// @param direction
+	/// @return void
+	void addBullet(Vector2 pos, Vector2 dir);
+
+	/// @brief Used to check if mouse is on button
+	/// @param position 
+	/// @param within position
+	/// @param width & height
+	/// @return bool
+	bool mouseIsOn(Vector2 position, Vector2 withinPos, Vector2 s);
+
+	Map* map;
+	Hud* hud;
+	Player* player;
+	Enemy1* e1;
+	Enemy2* e2;
+	Enemy1* e3;
+	///< @brief win/die message
+	Text* winOrDie;
+
+	///< @brief Timer
+	Timer t;
+
+	///< @brief Current camouflage
+	int currentCamouflage = 3;
+
+	///< @brief Move by key or move by click
+	bool moveByKey = true;
+
+	///< @brief Mouse position
+	Vector2 mousePosition;
+
+	///< @brief List of enemies
+	vector<Enemy*> enemies;
+	///< @brief List of bullets
+	vector<Bullet*> bullets;
+	///< @brief List of items
+	vector<Item*> items;
+	///< @brief List of layers, meant for: [0]Map - [1]items - [2]player - [3]enemy - [4]bullets - [5]HUD
+	vector<BasicEntity*> layers;
+	///< @brief top layer for forloop
+	unsigned int topLayer = 5; 
+
+	///< @brief Offset for win/die text
 	int offSetWinDie = 0;
+	///< @brief Used for no instant quit when won
 	double timeQuit = 0;
+	///< @brief Used for no instant quit when won
 	bool won = false;
+	///< @brief Used for no instant reset when died
 	double timeOfDead = 0;
+	///< @brief Used for no instant reset when died
 	bool dead = false;
 };
 

@@ -1,11 +1,3 @@
-/**
- * Copyright 2015 Your Name <you@yourhost.com>
- *
- * @file myentity.h
- *
- * @brief description of MyEntity behavior.
- */
-
 #ifndef ITEM_H
 #define ITEM_H
 
@@ -15,19 +7,22 @@
 
 using namespace std;
 
- /// @brief The MyEntity class is the Entity implementation.
-class Item : public Entity
-{
-public:
+/// @brief Item extends from Entity
+class Item : public Entity {
 
+public:
+	/// @brief Constructor
+	/// @param filename
 	Item(string filename);
+	/// @brief Destructor
 	virtual ~Item();
+	/// @brief update is automatically called every frame
+	/// @param deltaTime the elapsed time in seconds
+	/// @return void
 	virtual void update(float deltaTime);
 
+	///< @brief Name of file
 	string name;
-
-private:
-
 };
 
 #endif /* ITEM_H */

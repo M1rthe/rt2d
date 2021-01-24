@@ -52,6 +52,7 @@ Map::Map() : Entity() {
 				if (level[i].at(2) == 'r') { f = 2; } //BRicks
 				if (level[i].at(2) == 't') { f = 8; } //BarsTop
 				if (level[i].at(2) == 'b') { f = 9; } //BarsBottom
+				if (level[i].at(2) == 'u') { f = 13; } //BUsh
 			}
 			if (level[i].at(1) == 'w') {
 				if (level[i].at(2) == 'a') { f = 3; } //WAter

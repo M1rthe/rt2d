@@ -4,10 +4,9 @@ Enemy2::Enemy2() : Enemy() {
 
 	type = 2;
 
-	actionDistance = 90;
+	actionDistance = 75;
 	this->addSprite("assets/Enemies/Human1.tga");
 	this->sprite()->filter(0);
-	this->scale = Point2(3, 3);
 	mirror = scale.x;
 	attackCooldown = 2.0;
 }

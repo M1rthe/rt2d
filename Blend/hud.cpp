@@ -9,9 +9,9 @@
 Hud::Hud() : Entity() {
 
 	mission = new Text();
-	camouflage1 = new Camouflage(1);
-	camouflage2 = new Camouflage(2);
-	camouflage3 = new Camouflage(3);
+	camouflage1 = new Camouflage();
+	camouflage2 = new Camouflage();
+	camouflage3 = new Camouflage();
 	camouflagegauge = new Camouflagegauge();
 
 	addChild(mission);
@@ -31,7 +31,7 @@ Hud::Hud() : Entity() {
 	camouflage3->position = Vector2(SWIDTH - (margin * 3) - (size/2 * 2.0), SHEIGHT - margin);
 	camouflagegauge->position = Vector2(margin, SHEIGHT - margin);
 
-	camouflage1->setCamouflage(0);
+	camouflage1->setCamouflage(13);
 	camouflage2->setCamouflage(2);
 	camouflage3->setCamouflage(4);
 }

@@ -1,26 +1,23 @@
-/**
- * This class describes MyEntity behavior.
- *
- * Copyright 2015 Your Name <you@yourhost.com>
- */
-
 #include "camouflagegauge.h"
 
 Camouflagegauge::Camouflagegauge() : Entity() {
 
-	this->addSprite("assets/camouflageButton.tga");
-
-	overlappingSpace = new Text();
-	this->addChild(overlappingSpace);
+	addSpriteSheet("assets/camouflageButton.tga", 1, 2);
+	sprite()->filter(0);
 }
 
 Camouflagegauge::~Camouflagegauge() {
-	this->removeChild(overlappingSpace);
-	delete overlappingSpace;
+
 }
 
 void Camouflagegauge::update(float deltaTime) {
 
 }
 
+void Camouflagegauge::isHidden(bool hidden) {
+	if (hidden) {
+		sprite()->frame(1);
+	}
+	else { sprite()->frame(0);  }
+}
 

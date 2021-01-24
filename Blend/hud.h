@@ -1,11 +1,3 @@
-/**
- * Copyright 2015 Your Name <you@yourhost.com>
- *
- * @file myentity.h
- *
- * @brief description of MyEntity behavior.
- */
-
 #ifndef HUD_H
 #define HUD_H
 
@@ -15,30 +7,34 @@
 #include "camouflage.h"
 #include "camouflagegauge.h"
 
- /// @brief The MyEntity class is the Entity implementation.
-class Hud : public Entity
-{
-public:
+/// @brief Hud extends from Entity
+class Hud : public Entity {
 
+public:
 	/// @brief Constructor
 	Hud();
 	/// @brief Destructor
 	virtual ~Hud();
-
-	Text* mission;
-	Camouflage* camouflage1;
-	Camouflage* camouflage2;
-	Camouflage* camouflage3;
-	Camouflagegauge* camouflagegauge;
-
 	/// @brief update is automatically called every frame
 	/// @param deltaTime the elapsed time in seconds
 	/// @return void
 	virtual void update(float deltaTime);
 
-private:
+	///< @brief Mission
+	Text* mission;
+	///< @brief Camouflage button 1
+	Camouflage* camouflage1;
+	///< @brief Camouflage button 2
+	Camouflage* camouflage2;
+	///< @brief Camouflage button 3
+	Camouflage* camouflage3;
+	///< @brief Camouflage isHidden
+	Camouflagegauge* camouflagegauge;
 
+private:
+	///< @brief Margin around HUD
 	float margin;
+	///< @brief Size of buttons
 	int size;
 };
 

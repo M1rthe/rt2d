@@ -3,21 +3,21 @@
 
 #include "enemy.h"
 
+/// @brief Enemy1 extends from Enemy
 class Enemy1 : public Enemy {
 
 public:
-
-	//Standard entity function
+	/// @brief Constructor
 	Enemy1();
+	/// @brief Destructor
 	virtual ~Enemy1();
+	/// @brief update is automatically called every frame
+	/// @param deltaTime the elapsed time in seconds
+	/// @return void
 	virtual void update(float deltaTime);
-	//Functions
-
-	//Variables
 
 private:
-
-	//Functions
+	/// @brief Attack function overrides Enemy attack function
 	void attack() override;
 };
 

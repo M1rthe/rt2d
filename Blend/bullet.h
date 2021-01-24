@@ -1,29 +1,29 @@
-/**
- * Copyright 2015 Your Name <you@yourhost.com>
- *
- * @file myentity.h
- *
- * @brief description of MyEntity behavior.
- */
-
 #ifndef BULLET_H
 #define BULLET_H
 
 #include <rt2d/entity.h>
 #include "collider.h"
 
+/// @brief Bullet extends from Entity
 class Bullet : public Entity {
 
 public:
-
-	Bullet(Vector2 _startPosition, Vector2 _direction);
+	/// @brief constructor
+	/// @param direction The direction the bullets moves
+	Bullet(Vector2 _direction);
+	/// @brief destructor
 	virtual ~Bullet();
+	/// @brief update is automatically called every frame
+	/// @param deltaTime the elapsed time in seconds
+	/// @return void
 	virtual void update(float deltaTime);
 
+	/// @brief get the Rectangle of Bullet
+	/// @return Rectangle
 	Rectangle getRect();
 
 private:
-	Vector2 startPosition;
+	///< @brief direction The direction the bullets moves. It is also used to calculate the rotation
 	Vector2 direction;
 };
 
