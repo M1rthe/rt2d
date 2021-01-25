@@ -7,7 +7,7 @@ Enemy::Enemy() : Entity() {
 	actionDistance = 250;
 	this->addSprite("assets/Enemies/Human1.tga");
 	this->sprite()->filter(0);
-	this->scale = Point2(2.8, 2.8);
+	this->scale = Point2(2.5, 2.5);
 	mirror = scale.x;
 
 	questionMark = new Text();
@@ -25,7 +25,9 @@ void Enemy::update(float deltaTime) {
 
 }
 
-Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamouflaged, bool playerIsMoving) {
+Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflaged, bool playerIsMoving) {
+
+	Vector2 playerPosition = Vector2(playerRect.x, playerRect.y);
 
 	//Randomly turn around
 	if (!canSeePlayer) {
@@ -50,8 +52,12 @@ Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamoufla
 		//std::cout << "BODY\n";
 		enemyPos = Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 2));
 	}
-
-	Vector2 direction = (playerPosition - enemyPos);
+	//Movement
+	Vector2 enemyPosDirection = playerPosition - enemyPos;
+	float enemyPosDistance = sqrt(enemyPosDirection.x * enemyPosDirection.x + enemyPosDirection.y * enemyPosDirection.y);
+	enemyPosDirection = Vector2(enemyPosDirection.x / enemyPosDistance, enemyPosDirection.y / enemyPosDistance);
+	//Attack
+	Vector2 direction = (playerPosition - position); // enemyPos
 	float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
 	direction = Vector2(direction.x / distance, direction.y / distance);
 
@@ -59,45 +65,58 @@ Vector2 Enemy::ai(float deltaTime, Vector2 playerPosition, bool playerIsCamoufla
 
 		dirWhenLostPlayer = direction;
 
+		float distance2Body = sqrt((playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).x * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).x + (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).y * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).y);
+
 		//MOVE
-		if (distance > actionDistance) {
-			move(deltaTime, direction);
-		} 
+		if (distance2Body > actionDistance) {
+			move(deltaTime, enemyPosDirection);
+			std::cout << "MOVE\n";
+		}
 		//QUESTION MARK
 		questionMark->message("!");
 		//ATTACK
-		float distance2Body = sqrt((playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).x * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).x + (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).y * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).y);
-		//std::cout << "distance2Body("<< (int)distance2Body <<") < actionDistance("<< actionDistance<<")\n";
 		if (distance2Body < actionDistance) {
-			if (time.seconds() - timeWhenTurnedAround > 0.5) { //Because its kinda scary if it turns around and instantly shoots. So I give the enemy half a second to aim
+			if (time.seconds() - timeFirstSeenPlayer > 1) { //Because its kinda scary if it turns around and instantly shoots. So I give the enemy half a second to aim
 				attack();
+				//std::cout << "ATTACK\n";
 			}
 		}
 		//FACING
-		if (distance > 5) { 
+		if (distance > 5) {
 			float scaleBefore = scale.x;
 			if (playerPosition.x > position.x) { scale.x = mirror * -1; questionMark->scale.x = -0.5; }
 			if (playerPosition.x < position.x) { scale.x = mirror; questionMark->scale.x = 0.5; }
-			if (scaleBefore != scale.x) { timeWhenTurnedAround = time.seconds(); }
-		} 
+		}
 	}
 
-	if (timeLostPlayer + 3 >= time.seconds()) {
-		std::cout << "should move aswell\n";
+	float distanceBetweenLastSeenPlayerPos = sqrt((lastSeenPlayerPos - position).x * (lastSeenPlayerPos - position).x + (lastSeenPlayerPos - position).y * (lastSeenPlayerPos - position).y);
+
+	if (timeLostPlayer + 3 >= time.seconds() && distanceBetweenLastSeenPlayerPos > 100) {
+
 		move(deltaTime, dirWhenLostPlayer);
 	}
-
+	
 	//CAN SEE PLAYER
 	bool before = canSeePlayer;
-	canSeePlayer = seesPlayer(playerPosition, playerIsCamouflaged, playerIsMoving, direction, distance);
+	canSeePlayer = seesPlayer(Vector2(playerRect.x, playerRect.y + playerRect.height), playerIsCamouflaged, playerIsMoving, direction, distance);
 
 	//GOT AWAY
 	if (canSeePlayer == false && before == true) {
+		std::cout << "got away\n";
 		questionMark->message("?");
 		timeLostPlayer = time.seconds();
+		lastSeenPlayerPos = playerPosition;
+		//playerWasMoving = playerIsMoving;
+	}
+	//Just see
+	if (canSeePlayer == true && before == false) {
+		std::cout << "sees player\n";
+		timeFirstSeenPlayer = time.seconds();
 	}
 
-	std::cout << "\n";
+	if (timeLostPlayer + 3 < time.seconds() && !canSeePlayer) {
+		questionMark->clearMessage();
+	}
 
 	return direction;
 }
@@ -110,7 +129,7 @@ Rectangle Enemy::getRect() {
 
 	return Rectangle(
 		position.x - (sprite()->width() * scaleX / 2),
-		position.y + (sprite()->height() * scale.y / 2) - 20,
+		position.y + (sprite()->height() * scale.y / 2) - 30,
 		sprite()->width() * scaleX,
 		30 //20
 	);
@@ -131,7 +150,7 @@ void Enemy::move(float deltaTime, Vector2 direction) {
 	//bool collidedBoolX = Collider::rectangle2rectangle(getRect(), playerCollider);
 	//if (collidedBoolX) { if (!collided) { collided = collidedBoolX; } }
 
-	if (collided) { position = oldPosition; collidingWithWall = true; }
+	if (collided) { position = oldPosition; std::cout << "tp back\n"; collidingWithWall = true; }
 
 	//y
 	oldPosition = position;
@@ -144,7 +163,7 @@ void Enemy::move(float deltaTime, Vector2 direction) {
 	//bool collidedBoolY = Collider::rectangle2rectangle(getRect(), playerCollider);
 	//if (collidedBoolY) { if (!collided) { collided = collidedBoolY; } }
 
-	if (collided) { position = oldPosition; collidingWithWall = true; }
+	if (collided) { position = oldPosition; std::cout << "tp back\n"; collidingWithWall = true; }
 }
 
 bool Enemy::seesPlayer(Vector2 playerPosition_, bool playerIsCamouflaged_, bool playerIsMoving_, Vector2 direction_, float distance_) {
@@ -171,7 +190,6 @@ bool Enemy::seesPlayer(Vector2 playerPosition_, bool playerIsCamouflaged_, bool 
 		float w = 0;
 		if (position.x + (getRect().width / 2) < playerPosition_.x) {
 			w = getRect().width;
-			std::cout << "add enemy width\n";
 		}
 		Vector2 _enemyPos = Vector2(position.x + w, position.y - (h - (h / 6 * (castI + 0.5))));
 		_enemyPos.y += h / 2;

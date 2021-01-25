@@ -116,16 +116,16 @@ Rectangle Player::getRect(int wholeBody) {
 	if (facing == RIGHT) {
 		return Rectangle(
 			position.x - (scale.x * sprite()->size.x / 2),
-			position.y - (scale.y * sprite()->size.y / 2) + 40,
+			position.y - (scale.y * sprite()->size.y / 2) + 45,
 			scale.x * sprite()->size.x - 12,
-			scale.y * sprite()->size.y - 40
+			scale.y * sprite()->size.y - 45
 		);
 	}
 	return Rectangle(
 		position.x - (scale.x * sprite()->size.x / 2) + 12,
-		position.y - (scale.y * sprite()->size.y / 2) + 40,
+		position.y - (scale.y * sprite()->size.y / 2) + 45,
 		scale.x * sprite()->size.x - 12,
-		scale.y * sprite()->size.y - 40
+		scale.y * sprite()->size.y - 45
 	);
 }
 

@@ -35,7 +35,7 @@ public:
 	/// @param playerIsCamouflaged seesPlayer function(gets called in this function) needs that data
 	/// @param playerIsMoving Enemy can hear you moving if you are near
 	/// @return Vector2
-	Vector2 ai(float deltaTime, Vector2 playerPosition, bool playerIsCamouflaged, bool playerIsMoving);
+	Vector2 ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflaged, bool playerIsMoving);
 
 	///< @brief Type of enemy (Shoots or Hits)
 	int type;
@@ -58,6 +58,9 @@ public:
 	///< @brief This way Enemy searches a little longer when lost sight of Player
 	double timeLostPlayer = -3.0;
 	Vector2 dirWhenLostPlayer;
+
+	double timeFirstSeenPlayer = 0.0;
+
 	///< @brief Timer
 	Timer time;
 
@@ -103,6 +106,9 @@ private:
 	
 	///< @brief Check if Enemy collides with a wall
 	bool collidingWithWall = false;
+	Vector2 lastSeenPlayerPos;
+
+	//bool playerWasMoving = false;
 };
 
 #endif /* ENEMY_H */

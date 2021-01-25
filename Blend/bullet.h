@@ -22,6 +22,8 @@ public:
 	/// @return Rectangle
 	Rectangle getRect();
 
+	bool collision = false;
+
 private:
 	///< @brief direction The direction the bullets moves. It is also used to calculate the rotation
 	Vector2 direction;

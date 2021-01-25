@@ -31,11 +31,43 @@ Map::Map() : Entity() {
 
 	addChild(grid);
 
-	for (int i = 0; i < grid->spritebatch().size(); i++) { 
+	calculateTiles();
+}
+
+Map::~Map() {
+	removeChild(grid);
+	delete grid;
+	delete[] level;
+	tilesWithCollision.clear();
+}
+
+void Map::update(float deltaTime) {
+
+}
+
+void Map::changeTiles(string find, string replaceString) {
+
+	for (int i = 0; i < grid->spritebatch().size(); i++) {
+
+		if (find == level[i]) {
+			std::cout << "i: "<<i<<"\n";
+			level[i] = replaceString;
+		}
+	}
+}
+
+void Map::calculateTiles() {
+
+	reloadedMap = true;
+
+	tilesWithCollision.clear();
+	tilesWithCollider.clear();
+
+	for (int i = 0; i < grid->spritebatch().size(); i++) {
 
 		//Collision (t or f)
 		if (level[i].length() > 0) {
-			if (level[i].at(0) == 't') {
+			if (level[i].at(0) == 't') { 
 				tilesWithCollision.push_back(i);
 			}
 		}
@@ -44,28 +76,50 @@ Map::Map() : Entity() {
 
 		if (level[i].length() > 1) {
 			if (level[i].at(1) == 'd') {
-				if (level[i].at(2) == 'i') { f = 1; } //DIrt
-				if (level[i].at(2) == 't') { f = 11; } //DoorTop
-				if (level[i].at(2) == 'b') { f = 12; } //DoorBottom
+				if (level[i].length() > 2) {
+					if (level[i].at(2) == 'i') { f = 1; } //DIrt
+					if (level[i].at(2) == 't') {
+						f = 11;
+						if (level[i].length() > 3) {
+							if (level[i].at(3) == 'o') { f = 14; } //DoorOpen 14
+						}
+					} //DoorTop		//11
+					if (level[i].at(2) == 'b') {
+						f = 12;
+						if (level[i].length() > 3) {
+							if (level[i].at(3) == 'o') { f = 14; } //DoorOpen 14
+						}
+					} //DoorBottom		//12
+				}
 			}
 			if (level[i].at(1) == 'b') {
-				if (level[i].at(2) == 'r') { f = 2; } //BRicks
-				if (level[i].at(2) == 't') { f = 8; } //BarsTop
-				if (level[i].at(2) == 'b') { f = 9; } //BarsBottom
-				if (level[i].at(2) == 'u') { f = 13; } //BUsh
+				if (level[i].length() > 2) {
+					if (level[i].at(2) == 'r') { f = 2; } //BRicks
+					if (level[i].at(2) == 't') { f = 8; } //BarsTop
+					if (level[i].at(2) == 'b') { f = 9; } //BarsBottom
+					if (level[i].at(2) == 'u') { f = 13; } //BUsh
+				}
 			}
 			if (level[i].at(1) == 'w') {
-				if (level[i].at(2) == 'a') { f = 3; } //WAter
+				if (level[i].length() > 2) {
+					if (level[i].at(2) == 'a') { f = 3; } //WAter
+				}
 			}
 			if (level[i].at(1) == 's') {
-				if (level[i].at(2) == 'b') { f = 5; } //StoneBricks
-				if (level[i].at(2) == 't') { f = 7; } //STone
+				if (level[i].length() > 2) {
+					if (level[i].at(2) == 'b') { f = 5; } //StoneBricks
+					if (level[i].at(2) == 't') { f = 7; } //STone
+				}
 			}
 			if (level[i].at(1) == 'p') {
-				if (level[i].at(2) == 'l') { f = 10; } //PLanks
+				if (level[i].length() > 2) {
+					if (level[i].at(2) == 'l') { f = 10; } //PLanks
+				}
 			}
 			if (level[i].at(1) == 'l') {
-				if (level[i].at(2) == 'u') { f = 6; } //LUchtrooster
+				if (level[i].length() > 2) {
+					if (level[i].at(2) == 'u') { f = 6; } //LUchtrooster
+				}
 			}
 			if (level[i].at(1) == 'c') { //Color
 				f = 4;
@@ -83,22 +137,15 @@ Map::Map() : Entity() {
 			}
 		}
 
-		if (level[i].at(level[i].length() - 1) == 'F') { grid->spritebatch()[i]->spritescale.x *= -1; }
+		if (level[i].at(level[i].length() - 1) == 'F') { grid->spritebatch()[i]->spritescale.x = -1; } else { grid->spritebatch()[i]->spritescale.x = 1; }
 
 		grid->spritebatch()[i]->filter(0);
 		grid->spritebatch()[i]->frame(f);
 	}
 
-	for (int j = 0; j < tilesWithCollision.size(); j++)	{
+	for (int j = 0; j < tilesWithCollision.size(); j++) {
 		tilesWithCollider.push_back(getRectTile(j)); // NO getRectTile(tilesWithCollision[j]), tilesWithCollision happens in function itself
 	}
-}
-
-Map::~Map() {
-	removeChild(grid);
-	delete grid;
-	delete[] level;
-	tilesWithCollision.clear();
 }
 
 int Map::findMostOverlappedTile(Vector2 pos, Vector2 size, int camouflage, int facing) {
@@ -204,8 +251,4 @@ Rectangle Map::getRectTile(int tile) {
 		cellwidth,
 		cellheight
 	);
-}
-
-void Map::update(float deltaTime) {
-
 }

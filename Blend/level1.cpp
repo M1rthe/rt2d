@@ -105,11 +105,11 @@ void Level1::reset() {
 	player->clickCamouflage(1);
 	currentCamouflage = 1;
 	//Hud
-	hud->mission->message("Eat the donut laying in the police station, by pressing 'c'.");
+	hud->mission->message("Eat the donut laying in the police station, by pressing 'c'. Then get away.");
 	winOrDie->scale = Vector2(4, 4);
 	//Enemy
 	e1->position = Vector2(1800, 830);
-	e2->position = Vector2(1700, 1200);
+	e2->position = Vector2(1750, 1200);
 	e3->position = Vector2(1200, 1530);
 
 	for (int i = 0; i < enemies.size(); i++) {
@@ -117,6 +117,12 @@ void Level1::reset() {
 	}
 	//Booleans
 	moveByKey = true;
+	//map
+	map->changeTiles("tdt", "fdto");
+	map->changeTiles("tdb", "fdbo");
+	map->changeTiles("tdtF", "fdtoF");
+	map->changeTiles("tdbF", "fdboF");
+	map->calculateTiles();
 	//Set stuff
 	player->colliders = map->tilesWithCollider;
 	for (int i = 0; i < enemies.size(); i++) {
@@ -125,6 +131,21 @@ void Level1::reset() {
 }
 
 void Level1::update(float deltaTime) {
+
+	if (!Collider::rectangle2rectangle(player->getRect(0), Rectangle(928, 416, 1088, 1152))) {
+		if (hasDonut) {
+			win();
+		}
+	}
+
+	if (map->reloadedMap) {
+		map->reloadedMap = false;
+		std::cout << "\nRELOAD MAP\n\n";
+		player->colliders = map->tilesWithCollider;
+		for (int i = 0; i < enemies.size(); i++) {
+			enemies[i]->colliders = map->tilesWithCollider;
+		}
+	}
 
 	/*
 	layers[4]->ddClear();
@@ -158,7 +179,14 @@ void Level1::update(float deltaTime) {
 		if (dist < 30) {
 			if (items[i]->name == "Donut") {
 				if (player->tongueIsStickedOut) {
-					win();
+					hasDonut = true;
+					//
+					map->changeTiles("fdto", "tdt");
+					map->changeTiles("fdbo", "tdb");
+					map->changeTiles("fdtoF", "tdtF");
+					map->changeTiles("fdboF", "tdbF");
+					std::cout << "SHOULD RELOAD MAP\n";
+					map->calculateTiles();
 					//Delete
 					layers[1]->removeChild(items[i]);
 					delete items[i];
@@ -175,15 +203,30 @@ void Level1::update(float deltaTime) {
 
 		bool removeBullet = false;
 
-		//Collision
-		if (Collider::rectangle2rectangle(player->getRect(0), bullets[i]->getRect())) {
+		//Collision with player
+		if (Collider::rectangle2rectangle(player->getRect(1), bullets[i]->getRect())) {
 			die();
 		}
 
+		//Collision with walls
+		bool test = false;
 		for (int ii = 0; ii < map->tilesWithCollider.size(); ii++) {
+
 			if (Collider::rectangle2rectangle(map->tilesWithCollider[ii], bullets[i]->getRect())) {
-				removeBullet = true;
-			}
+				if (bullets[i]->collision) {
+					removeBullet = true;
+					std::cout << "Remove bullet\n";
+				}
+				test = true;
+			} 
+
+			/*if (!Collider::rectangle2rectangle(map->tilesWithCollider[ii], bullets[i]->getRect())) {
+				bullets[i]->collision = true;
+				std::cout << "Bullet collides again after being in the air & not in spawn\n";
+			}*/
+		}
+		if (!test) {
+			bullets[i]->collision = true;
 		}
 
 		//Delete bullets the player can't see
@@ -220,7 +263,7 @@ void Level1::update(float deltaTime) {
 		//enemies[i]->playerCollider = player->getRect(1);
 
 		//AI
-		Vector2 direction = enemies[i]->ai(deltaTime, player->position, overlapping <= 45, player->isMoving);
+		Vector2 direction = enemies[i]->ai(deltaTime, player->getRect(1), overlapping <= 45, player->isMoving);
 
 		//Shooting
 		if (enemies[i]->isAttackedThisFrame) {

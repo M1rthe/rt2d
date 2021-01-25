@@ -89,6 +89,8 @@ private:
 	double timeOfDead = 0;
 	///< @brief Used for no instant reset when died
 	bool dead = false;
+
+	bool hasDonut = false;
 };
 
 #endif /* LEVEL1_H */
