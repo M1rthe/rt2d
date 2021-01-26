@@ -26,6 +26,6 @@ void Enemy2::attack() {
 		isAttackedThisFrame = true;
 		timeFirstAttacked = time.seconds();
 
-		std::cout << "Got hit by Enemy2\n";
+		std::cout << "Stab animation\n";
 	}
 }

@@ -26,7 +26,7 @@ void Enemy1::attack() {
 		isAttackedThisFrame = true;
 		timeFirstAttacked = time.seconds();
 
-		std::cout << "Got shot by Enemy1\n";
+		std::cout << "Shoot animation\n";
 	}
 }
 

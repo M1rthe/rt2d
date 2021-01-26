@@ -50,7 +50,6 @@ void Map::changeTiles(string find, string replaceString) {
 	for (int i = 0; i < grid->spritebatch().size(); i++) {
 
 		if (find == level[i]) {
-			std::cout << "i: "<<i<<"\n";
 			level[i] = replaceString;
 		}
 	}

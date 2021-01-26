@@ -140,7 +140,7 @@ void Level1::update(float deltaTime) {
 
 	if (map->reloadedMap) {
 		map->reloadedMap = false;
-		std::cout << "\nRELOAD MAP\n\n";
+		//std::cout << "\nRELOAD MAP\n\n";
 		player->colliders = map->tilesWithCollider;
 		for (int i = 0; i < enemies.size(); i++) {
 			enemies[i]->colliders = map->tilesWithCollider;
@@ -185,7 +185,7 @@ void Level1::update(float deltaTime) {
 					map->changeTiles("fdbo", "tdb");
 					map->changeTiles("fdtoF", "tdtF");
 					map->changeTiles("fdboF", "tdbF");
-					std::cout << "SHOULD RELOAD MAP\n";
+					//std::cout << "SHOULD RELOAD MAP\n";
 					map->calculateTiles();
 					//Delete
 					layers[1]->removeChild(items[i]);
@@ -215,7 +215,7 @@ void Level1::update(float deltaTime) {
 			if (Collider::rectangle2rectangle(map->tilesWithCollider[ii], bullets[i]->getRect())) {
 				if (bullets[i]->collision) {
 					removeBullet = true;
-					std::cout << "Remove bullet\n";
+					//std::cout << "Remove bullet\n";
 				}
 				test = true;
 			} 
@@ -271,7 +271,7 @@ void Level1::update(float deltaTime) {
 				addBullet(enemies[i]->position, direction);
 			}
 			else {
-				std::cout << "Swing around with knife or fly swatter\n";
+				//std::cout << "Swing around with knife or fly swatter\n";
 				die();
 			}
 		}
@@ -345,7 +345,7 @@ void Level1::update(float deltaTime) {
 	}
 
 	if (dead && t.seconds() > timeOfDead) {
-		std::cout << "Respawn\n";
+		//std::cout << "Respawn\n";
 		dead = false;
 		timeOfDead = 0;
 		winOrDie->clearMessage();

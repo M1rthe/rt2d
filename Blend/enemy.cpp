@@ -70,7 +70,7 @@ Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflage
 		//MOVE
 		if (distance2Body > actionDistance) {
 			move(deltaTime, enemyPosDirection);
-			std::cout << "MOVE\n";
+			//std::cout << "MOVE\n";
 		}
 		//QUESTION MARK
 		questionMark->message("!");
@@ -102,7 +102,7 @@ Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflage
 
 	//GOT AWAY
 	if (canSeePlayer == false && before == true) {
-		std::cout << "got away\n";
+		//std::cout << "got away\n";
 		questionMark->message("?");
 		timeLostPlayer = time.seconds();
 		lastSeenPlayerPos = playerPosition;
@@ -110,7 +110,7 @@ Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflage
 	}
 	//Just see
 	if (canSeePlayer == true && before == false) {
-		std::cout << "sees player\n";
+		//std::cout << "sees player\n";
 		timeFirstSeenPlayer = time.seconds();
 	}
 
@@ -150,7 +150,7 @@ void Enemy::move(float deltaTime, Vector2 direction) {
 	//bool collidedBoolX = Collider::rectangle2rectangle(getRect(), playerCollider);
 	//if (collidedBoolX) { if (!collided) { collided = collidedBoolX; } }
 
-	if (collided) { position = oldPosition; std::cout << "tp back\n"; collidingWithWall = true; }
+	if (collided) { position = oldPosition; collidingWithWall = true; }
 
 	//y
 	oldPosition = position;
@@ -163,7 +163,7 @@ void Enemy::move(float deltaTime, Vector2 direction) {
 	//bool collidedBoolY = Collider::rectangle2rectangle(getRect(), playerCollider);
 	//if (collidedBoolY) { if (!collided) { collided = collidedBoolY; } }
 
-	if (collided) { position = oldPosition; std::cout << "tp back\n"; collidingWithWall = true; }
+	if (collided) { position = oldPosition; collidingWithWall = true; }
 }
 
 bool Enemy::seesPlayer(Vector2 playerPosition_, bool playerIsCamouflaged_, bool playerIsMoving_, Vector2 direction_, float distance_) {
