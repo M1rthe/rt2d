@@ -27,7 +27,7 @@ void Enemy::update(float deltaTime) {
 
 Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflaged, bool playerIsMoving) {
 
-	Vector2 playerPosition = Vector2(playerRect.x, playerRect.y);
+	Vector2 playerPosition = Vector2(playerRect.x + playerRect.width/2, playerRect.y);
 
 	//Randomly turn around
 	if (!canSeePlayer) {
@@ -40,7 +40,8 @@ Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflage
 		}
 	}
 
-	isAttackedThisFrame = false;
+	shootThisFrame = false;
+	stabThisFrame = false;
 
 	Vector2 enemyPos;
 
@@ -65,7 +66,8 @@ Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflage
 
 		dirWhenLostPlayer = direction;
 
-		float distance2Body = sqrt((playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).x * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).x + (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).y * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).y);
+		//float distance2Body = sqrt((playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).x * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).x + (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).y * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y + (sprite()->height() * scale.y / 3))).y);
+		float distance2Body = sqrt((playerPosition - Vector2(position.x + (getRect().width / 2), position.y)).x * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y)).x + (playerPosition - Vector2(position.x + (getRect().width / 2), position.y)).y * (playerPosition - Vector2(position.x + (getRect().width / 2), position.y)).y);
 
 		//MOVE
 		if (distance2Body > actionDistance) {
@@ -75,6 +77,7 @@ Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflage
 		//QUESTION MARK
 		questionMark->message("!");
 		//ATTACK
+		//std::cout << "distance2Body: "<<distance2Body<<"\n";
 		if (distance2Body < actionDistance) {
 			if (time.seconds() - timeFirstSeenPlayer > 1) { //Because its kinda scary if it turns around and instantly shoots. So I give the enemy half a second to aim
 				attack();
@@ -124,14 +127,12 @@ Vector2 Enemy::ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflage
 void Enemy::attack() { }
 
 Rectangle Enemy::getRect() {
-	float scaleX = scale.x;
-	if (scaleX < 0) { scaleX *= -1; }
 
 	return Rectangle(
-		position.x - (sprite()->width() * scaleX / 2),
+		position.x - (sprite()->width() * abs(scale.x) / 2),
 		position.y + (sprite()->height() * scale.y / 2) - 30,
-		sprite()->width() * scaleX,
-		30 //20
+		sprite()->width() * abs(scale.x),
+		30 
 	);
 }
 
@@ -176,7 +177,7 @@ bool Enemy::seesPlayer(Vector2 playerPosition_, bool playerIsCamouflaged_, bool 
 	if (scale.x < 0 && playerPosition_.x < position.x) { boolSeesPlayer = false; }
 	if (scale.x > 0 && playerPosition_.x > position.x) { boolSeesPlayer = false; }
 
-	if (distance_ < 150 && playerIsMoving_) { boolSeesPlayer = true; } //So nearby they can hear you?
+	if (distance_ < 100 && playerIsMoving_) { boolSeesPlayer = true; } //So nearby they can hear you?
 
 	//Walls between you?
 

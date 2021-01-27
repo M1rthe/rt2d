@@ -37,16 +37,15 @@ public:
 	/// @return Vector2
 	Vector2 ai(float deltaTime, Rectangle playerRect, bool playerIsCamouflaged, bool playerIsMoving);
 
-	///< @brief Type of enemy (Shoots or Hits)
-	int type;
-
 	///< @brief Use it to keep track of Enemy scale
 	float mirror;
 
 	///< @brief How near the player is supposed to be to attack
 	int actionDistance;
-	///< @brief Bullets are made in scene so this is how level knows when to shoot
-	bool isAttackedThisFrame = false;
+
+	bool shootThisFrame = false;
+	bool stabThisFrame = false;
+
 	///< @brief This way Enemy doesn't attack every frame
 	double attackCooldown = 0.0;
 	///< @brief This way Enemy doesn't attack every frame

@@ -2,8 +2,6 @@
 
 Enemy1::Enemy1() : Enemy() {
 
-	type = 1;
-
 	actionDistance = 250;
 	this->addSprite("assets/Enemies/Human1.tga");
 	this->sprite()->filter(0);
@@ -23,7 +21,7 @@ void Enemy1::attack() {
 	
 	if (time.seconds() - timeFirstAttacked >= attackCooldown) {
 
-		isAttackedThisFrame = true;
+		shootThisFrame = true;
 		timeFirstAttacked = time.seconds();
 
 		std::cout << "Shoot animation\n";

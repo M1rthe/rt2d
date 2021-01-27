@@ -147,10 +147,9 @@ void Level1::update(float deltaTime) {
 		}
 	}
 
-	/*
 	layers[4]->ddClear();
 
-	for (int i = 0; i < enemies.size(); i++) {
+	/*for (int i = 0; i < enemies.size(); i++) {
 		for (int castI = 0; castI <= 5; castI++) {
 			int h = enemies[i]->sprite()->height() * enemies[i]->scale.y;
 
@@ -158,8 +157,7 @@ void Level1::update(float deltaTime) {
 			_enemyPos.y += h / 2;
 			layers[4]->ddLine(player->position, _enemyPos, RED);
 		}
-	}
-	*/
+	}*/
 
 	this->hud->position = Point(player->position.x - SWIDTH / 2, player->position.y - SHEIGHT / 2);
 	winOrDie->position = Point(player->position.x - SWIDTH / 2 + offSetWinDie, player->position.y);
@@ -201,46 +199,50 @@ void Level1::update(float deltaTime) {
 	// ###############################################################
 	for (int i = bullets.size() - 1; i >= 0; i--) {
 
-		bool removeBullet = false;
+		if (!dead) {
+			bool removeBullet = false;
 
-		//Collision with player
-		if (Collider::rectangle2rectangle(player->getRect(1), bullets[i]->getRect())) {
-			die();
-		}
+			//Collision with player
+			if (Collider::rectangle2rectangle(player->getRect(1), bullets[i]->getRect())) {
+				die();
+			}
+			else {
 
-		//Collision with walls
-		bool test = false;
-		for (int ii = 0; ii < map->tilesWithCollider.size(); ii++) {
+				//Collision with walls
+				bool test = false;
+				for (int ii = 0; ii < map->tilesWithCollider.size(); ii++) {
 
-			if (Collider::rectangle2rectangle(map->tilesWithCollider[ii], bullets[i]->getRect())) {
-				if (bullets[i]->collision) {
-					removeBullet = true;
-					//std::cout << "Remove bullet\n";
+					if (Collider::rectangle2rectangle(map->tilesWithCollider[ii], bullets[i]->getRect())) {
+						if (bullets[i]->collision) {
+							removeBullet = true;
+							//std::cout << "Remove bullet\n";
+						}
+						test = true;
+					}
+
+					/*if (!Collider::rectangle2rectangle(map->tilesWithCollider[ii], bullets[i]->getRect())) {
+						bullets[i]->collision = true;
+						std::cout << "Bullet collides again after being in the air & not in spawn\n";
+					}*/
 				}
-				test = true;
-			} 
+				if (!test) {
+					bullets[i]->collision = true;
+				}
 
-			/*if (!Collider::rectangle2rectangle(map->tilesWithCollider[ii], bullets[i]->getRect())) {
-				bullets[i]->collision = true;
-				std::cout << "Bullet collides again after being in the air & not in spawn\n";
-			}*/
-		}
-		if (!test) {
-			bullets[i]->collision = true;
-		}
+				//Delete bullets the player can't see
+				Point3 idk = (player->position - bullets[i]->position);
+				float dist = sqrt(idk.x * idk.x + idk.y * idk.y);
 
-		//Delete bullets the player can't see
-		Point3 idk = (player->position - bullets[i]->position);
-		float dist = sqrt(idk.x * idk.x + idk.y * idk.y);
+				if (dist > 1000) {
+					removeBullet = true;
+				}
 
-		if (dist > 1000) { 
-			removeBullet = true;
-		}
-
-		if (removeBullet) {
-			layers[4]->removeChild(bullets[i]);
-			delete bullets[i];
-			bullets.erase(bullets.begin() + i);
+				if (removeBullet) {
+					layers[4]->removeChild(bullets[i]);
+					delete bullets[i];
+					bullets.erase(bullets.begin() + i);
+				}
+			}
 		}
 	}
 
@@ -266,14 +268,12 @@ void Level1::update(float deltaTime) {
 		Vector2 direction = enemies[i]->ai(deltaTime, player->getRect(1), overlapping <= 45, player->isMoving);
 
 		//Shooting
-		if (enemies[i]->isAttackedThisFrame) {
-			if (enemies[i]->type == 1) {
-				addBullet(enemies[i]->position, direction);
-			}
-			else {
-				//std::cout << "Swing around with knife or fly swatter\n";
-				die();
-			}
+		if (enemies[i]->shootThisFrame && !dead && !won) {
+			addBullet(enemies[i]->position, direction);
+		}
+		if (enemies[i]->stabThisFrame && !dead && !won) {
+			//std::cout << "DIE\n";
+			die();
 		}
 
 		//Layers
@@ -369,9 +369,17 @@ bool Level1::mouseIsOn(Vector2 mousePos, Vector2 entityPos, Vector2 s) {
 
 void Level1::die() {
 	if (!dead) {
+
 		offSetWinDie = 192;
 		winOrDie->message("YOU DIED");
 		dead = true;
+
+		for (int i = 0; i < bullets.size(); i++) {
+			layers[4]->removeChild(bullets[i]);
+			delete bullets[i];
+			bullets[i] = nullptr;
+		}
+		bullets.clear();
 
 		timeOfDead = t.seconds() + 3;
 	}
@@ -382,6 +390,13 @@ void Level1::win() {
 		offSetWinDie = 128;
 		winOrDie->message("YOU WON!!");
 		won = true;
+
+		/*for (int i = bullets.size() - 1; i >= 0; i--) {
+			layers[4]->removeChild(bullets[i]);
+			delete bullets[i];
+			bullets.erase(bullets.begin() + i);
+		}
+		bullets.clear();*/
 
 		timeQuit = t.seconds() + 3;
 	}
